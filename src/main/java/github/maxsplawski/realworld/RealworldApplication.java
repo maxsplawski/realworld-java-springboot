@@ -2,12 +2,16 @@ package github.maxsplawski.realworld;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
 @SpringBootApplication
-public class RealworldApplication {
+@ComponentScan(basePackages = {"github.maxsplawski.realworld.*"})
+@EnableJpaRepositories(basePackages = {"github.maxsplawski.realworld.domain.*"})
+public class RealWorldApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(RealworldApplication.class, args);
+		SpringApplication.run(RealWorldApplication.class, args);
 	}
 
 }

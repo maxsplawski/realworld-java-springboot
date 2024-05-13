@@ -11,15 +11,12 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.logging.Logger;
-import java.util.stream.Collectors;
-
 @ControllerAdvice
 public class ExceptionHandler extends ResponseEntityExceptionHandler {
-    private Logger logger;
 
     @Override
     protected ResponseEntity<Object> handleMethodArgumentNotValid(
@@ -31,16 +28,23 @@ public class ExceptionHandler extends ResponseEntityExceptionHandler {
             @Nullable
             WebRequest request
     ) {
-        Map<String, List<String>> body = new HashMap<>();
+        Map<String, List<String>> errors = new HashMap<>();
 
-        List<String> errors = ex.getBindingResult()
-                .getFieldErrors()
-                .stream()
-                .map(DefaultMessageSourceResolvable::getDefaultMessage)
-                .collect(Collectors.toList());
+        ex.getBindingResult().getFieldErrors().forEach(fieldError -> {
+            String fieldName = fieldError.getField();
+            String errorMessage = fieldError.getDefaultMessage();
 
-        body.put("errors", errors);
+            if (!errors.containsKey(fieldName)) {
+                List<String> errorMessages = new ArrayList<>();
+                errorMessages.add(errorMessage);
+                errors.put(fieldName, errorMessages);
+            } else {
+                List<String> existingErrorMessages = errors.get(fieldName);
+                existingErrorMessages.add(errorMessage);
+            }
+        });
 
-        return new ResponseEntity<>(body, HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(Map.of("errors", errors), HttpStatus.BAD_REQUEST);
     }
+
 }

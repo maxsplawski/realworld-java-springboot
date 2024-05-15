@@ -17,8 +17,11 @@ public class ArticleService {
     public Article save(SaveArticle dto) {
         Article article = new Article();
 
-        article.setTitle(dto.getTitle());
-        article.setSlug(Slugger.slugifyFrom(dto.getTitle()));
+        var title = dto.getTitle();
+        var slug = Slugger.slugifyFrom(title);
+
+        article.setTitle(title);
+        article.setSlug(slug);
         article.setDescription(dto.getDescription());
         article.setBody(dto.getBody());
 

@@ -8,8 +8,11 @@ public class Article {
     @Id
     private Long Id;
 
-    @Column
+    @Column(unique = true)
     private String title;
+
+    @Column(unique = true)
+    private String slug;
 
     @Column
     private String description;
@@ -31,6 +34,14 @@ public class Article {
 
     public void setTitle(String title) {
         this.title = title;
+    }
+
+    public String getSlug() {
+        return slug;
+    }
+
+    public void setSlug(String slug) {
+        this.slug = slug;
     }
 
     public String getDescription() {

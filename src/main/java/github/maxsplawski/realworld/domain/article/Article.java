@@ -1,6 +1,10 @@
 package github.maxsplawski.realworld.domain.article;
 
 import jakarta.persistence.*;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
+
+import java.time.Instant;
 
 @Entity
 public class Article {
@@ -19,6 +23,12 @@ public class Article {
 
     @Column(length = 3000)
     private String body;
+
+    @CreationTimestamp
+    private Instant createdAt;
+
+    @UpdateTimestamp
+    private Instant updatedAt;
 
     public Long getId() {
         return Id;
@@ -58,5 +68,13 @@ public class Article {
 
     public void setBody(String body) {
         this.body = body;
+    }
+
+    public Instant getCreatedAt() {
+        return createdAt;
+    }
+
+    public Instant getUpdatedAt() {
+        return updatedAt;
     }
 }

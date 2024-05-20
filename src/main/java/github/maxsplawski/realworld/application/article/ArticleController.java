@@ -1,6 +1,7 @@
 package github.maxsplawski.realworld.application.article;
 
 import github.maxsplawski.realworld.application.article.dto.SaveArticle;
+import github.maxsplawski.realworld.application.article.dto.UpdateArticle;
 import github.maxsplawski.realworld.application.article.service.ArticleService;
 import github.maxsplawski.realworld.domain.article.Article;
 import github.maxsplawski.realworld.domain.article.ArticleRepository;
@@ -11,7 +12,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/articles")
@@ -24,32 +24,48 @@ public class ArticleController {
         this.articleRepository = articleRepository;
     }
 
+    @GetMapping("/{slug}")
+    public ResponseEntity<Map<String, Article>> getArticle(@PathVariable String slug) {
+        Article article = this.articleService.getArticle(slug);
+
+        Map<String, Article> responseBody = new HashMap<>();
+        responseBody.put("article", article);
+
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(responseBody);
+    }
+
     @PostMapping("")
     public ResponseEntity<Article> createArticle(@Valid @RequestBody SaveArticle dto) {
-        var createdArticle = this.articleService.save(dto);
+        Article createdArticle = this.articleService.createArticle(dto);
 
         return ResponseEntity
                 .status(HttpStatus.CREATED)
                 .body(createdArticle);
     }
 
-    @GetMapping("/{slug}")
-    public ResponseEntity<Map<String, Article>> getArticle(@PathVariable String slug) {
-        Optional<Article> optionalArticle = articleRepository.findBySlug(slug);
+    @PatchMapping("/{slug}")
+    public ResponseEntity<Map<String, Article>> updateArticle(
+            @PathVariable String slug,
+            @Valid @RequestBody UpdateArticle dto
+            ) {
+        Article updatedArticle = this.articleService.updateArticle(slug, dto);
 
-        if (optionalArticle.isPresent()) {
-            Article article = optionalArticle.get();
+        Map<String, Article> responseBody = new HashMap<>();
+        responseBody.put("article", updatedArticle);
 
-            Map<String, Article> responseBody = new HashMap<>();
-            responseBody.put("article", article);
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(responseBody);
+    }
 
-            return ResponseEntity
-                    .status(HttpStatus.OK)
-                    .body(responseBody);
-        } else {
-            return ResponseEntity
-                    .status(HttpStatus.NOT_FOUND)
-                    .build();
-        }
+    @DeleteMapping("/{slug}")
+    public ResponseEntity<Void> deleteArticle(@PathVariable String slug) {
+        this.articleService.deleteArticle(slug);
+
+        return ResponseEntity
+                .status(HttpStatus.NO_CONTENT)
+                .build();
     }
 }

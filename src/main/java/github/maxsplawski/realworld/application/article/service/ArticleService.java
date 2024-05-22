@@ -8,6 +8,8 @@ import github.maxsplawski.realworld.util.string.Slugger;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -16,6 +18,13 @@ public class ArticleService {
 
     public ArticleService(ArticleRepository articleRepository) {
         this.articleRepository = articleRepository;
+    }
+
+    public List<Article> getArticles() {
+        List<Article> articles = new ArrayList<>();
+        articleRepository.findAll().forEach(articles::add);
+
+        return articles;
     }
 
     public Article getArticle(String slug) {

@@ -11,17 +11,28 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @RestController
 @RequestMapping("/api/articles")
 public class ArticleController {
     private final ArticleService articleService;
-    private final ArticleRepository articleRepository;
 
-    public ArticleController(ArticleService articleService, ArticleRepository articleRepository) {
+    public ArticleController(ArticleService articleService) {
         this.articleService = articleService;
-        this.articleRepository = articleRepository;
+    }
+
+    @GetMapping("")
+    public ResponseEntity<Map<String, List<Article>>> getArticles() {
+        List<Article> articles = articleService.getArticles();
+
+        Map<String, List<Article>> responseBody = new HashMap<>();
+        responseBody.put("article", articles);
+
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(responseBody);
     }
 
     @GetMapping("/{slug}")

@@ -1,10 +1,9 @@
 package github.maxsplawski.realworld.application.article;
 
-import github.maxsplawski.realworld.application.article.dto.SaveArticle;
+import github.maxsplawski.realworld.application.article.dto.CreateArticle;
 import github.maxsplawski.realworld.application.article.dto.UpdateArticle;
 import github.maxsplawski.realworld.application.article.service.ArticleService;
 import github.maxsplawski.realworld.domain.article.Article;
-import github.maxsplawski.realworld.domain.article.ArticleRepository;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -48,7 +47,7 @@ public class ArticleController {
     }
 
     @PostMapping("")
-    public ResponseEntity<Article> createArticle(@Valid @RequestBody SaveArticle dto) {
+    public ResponseEntity<Article> createArticle(@Valid @RequestBody CreateArticle dto) {
         Article createdArticle = this.articleService.createArticle(dto);
 
         return ResponseEntity
@@ -60,7 +59,7 @@ public class ArticleController {
     public ResponseEntity<Map<String, Article>> updateArticle(
             @PathVariable String slug,
             @Valid @RequestBody UpdateArticle dto
-            ) {
+    ) {
         Article updatedArticle = this.articleService.updateArticle(slug, dto);
 
         Map<String, Article> responseBody = new HashMap<>();

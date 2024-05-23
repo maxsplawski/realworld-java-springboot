@@ -1,16 +1,23 @@
 package github.maxsplawski.realworld.domain.article;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import github.maxsplawski.realworld.domain.comment.Comment;
 import jakarta.persistence.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.Instant;
+import java.util.List;
 
 @Entity
 public class Article {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
     private Long Id;
+
+    @OneToMany(mappedBy = "article")
+    @JsonManagedReference
+    private List<Comment> comments;
 
     @Column(unique = true)
     private String title;
@@ -76,5 +83,23 @@ public class Article {
 
     public Instant getUpdatedAt() {
         return updatedAt;
+    }
+
+    public List<Comment> getComments() {
+        return comments;
+    }
+
+    public void setComments(List<Comment> comments) {
+        this.comments = comments;
+    }
+
+    public void addComment(Comment comment) {
+        comments.add(comment);
+        comment.setArticle(this);
+    }
+
+    public void removeComment(Comment comment) {
+        comments.remove(comment);
+        comment.setArticle(null);
     }
 }

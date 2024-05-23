@@ -1,6 +1,6 @@
 package github.maxsplawski.realworld.application.article.service;
 
-import github.maxsplawski.realworld.application.article.dto.SaveArticle;
+import github.maxsplawski.realworld.application.article.dto.CreateArticle;
 import github.maxsplawski.realworld.application.article.dto.UpdateArticle;
 import github.maxsplawski.realworld.domain.article.Article;
 import github.maxsplawski.realworld.domain.article.ArticleRepository;
@@ -32,7 +32,7 @@ public class ArticleService {
                 .orElseThrow(() -> new EntityNotFoundException(slug));
     }
 
-    public Article createArticle(SaveArticle dto) {
+    public Article createArticle(CreateArticle dto) {
         Article article = new Article();
 
         var title = dto.getTitle();
@@ -63,9 +63,9 @@ public class ArticleService {
     }
 
     public void deleteArticle(String slug) {
-        Optional<Article> optionalArticle = this.articleRepository.findBySlug(slug);
+        Optional<Article> article = this.articleRepository.findBySlug(slug);
 
-        optionalArticle.ifPresentOrElse(
+        article.ifPresentOrElse(
                 this.articleRepository::delete,
                 () -> { throw new EntityNotFoundException(slug); }
         );

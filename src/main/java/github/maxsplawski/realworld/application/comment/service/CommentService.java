@@ -8,6 +8,8 @@ import github.maxsplawski.realworld.domain.comment.CommentRepository;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class CommentService {
     private final CommentRepository commentRepository;
@@ -18,7 +20,14 @@ public class CommentService {
         this.commentRepository = commentRepository;
     }
 
-    public Comment createComment(String articleSlug, CreateComment dto) {
+    public List<Comment> getArticleComments(String articleSlug) {
+        Article article = articleRepository.findBySlug(articleSlug)
+                .orElseThrow(() -> new EntityNotFoundException(articleSlug));
+
+        return article.getComments();
+    }
+
+    public Comment createCommentForArticle(String articleSlug, CreateComment dto) {
         Article article = articleRepository.findBySlug(articleSlug)
                 .orElseThrow(() -> new EntityNotFoundException(articleSlug));
 

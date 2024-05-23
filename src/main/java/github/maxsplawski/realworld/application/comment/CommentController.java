@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -20,12 +21,24 @@ public class CommentController {
         this.commentService = commentService;
     }
 
+    @GetMapping("/{slug}/comments")
+    public ResponseEntity<Map<String, List<Comment>>> getArticleComments(@PathVariable String slug) {
+        List<Comment> comments = commentService.getArticleComments(slug);
+
+        Map<String, List<Comment>> responseBody = new HashMap<>();
+        responseBody.put("comments", comments);
+
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(responseBody);
+    }
+
     @PostMapping("/{slug}/comments")
-    public ResponseEntity<Map<String, Comment>> createComment(
+    public ResponseEntity<Map<String, Comment>> createCommentForArticle(
             @PathVariable String slug,
             @Valid @RequestBody CreateComment dto
     ) {
-        Comment comment = commentService.createComment(slug, dto);
+        Comment comment = commentService.createCommentForArticle(slug, dto);
 
         Map<String, Comment> responseBody = new HashMap<>();
         responseBody.put("comment", comment);

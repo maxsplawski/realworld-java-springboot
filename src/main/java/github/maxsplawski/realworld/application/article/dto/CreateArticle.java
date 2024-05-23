@@ -2,7 +2,7 @@ package github.maxsplawski.realworld.application.article.dto;
 
 import jakarta.validation.constraints.NotBlank;
 
-public class SaveArticle {
+public class CreateArticle {
     @NotBlank(message = "The title is required")
     private String title;
 

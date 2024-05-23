@@ -21,14 +21,14 @@ public class CommentService {
     }
 
     public List<Comment> getArticleComments(String articleSlug) {
-        Article article = articleRepository.findBySlug(articleSlug)
+        Article article = this.articleRepository.findBySlug(articleSlug)
                 .orElseThrow(() -> new EntityNotFoundException(articleSlug));
 
         return article.getComments();
     }
 
     public Comment createCommentForArticle(String articleSlug, CreateComment dto) {
-        Article article = articleRepository.findBySlug(articleSlug)
+        Article article = this.articleRepository.findBySlug(articleSlug)
                 .orElseThrow(() -> new EntityNotFoundException(articleSlug));
 
         Comment comment = new Comment();
@@ -36,6 +36,19 @@ public class CommentService {
 
         article.addComment(comment);
 
-        return commentRepository.save(comment);
+        return this.commentRepository.save(comment);
+    }
+
+    public void deleteArticleComment(String articleSlug, Long commentId) {
+        Article article = this.articleRepository.findBySlug(articleSlug)
+                .orElseThrow(() -> new EntityNotFoundException(articleSlug));
+
+        Comment comment = article.getComments()
+                .stream()
+                .filter(c -> c.getId().equals(commentId))
+                .findFirst()
+                .orElseThrow(() -> new EntityNotFoundException(commentId.toString()));
+
+        this.commentRepository.delete(comment);
     }
 }

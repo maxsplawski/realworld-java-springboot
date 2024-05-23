@@ -23,7 +23,7 @@ public class CommentController {
 
     @GetMapping("/{slug}/comments")
     public ResponseEntity<Map<String, List<Comment>>> getArticleComments(@PathVariable String slug) {
-        List<Comment> comments = commentService.getArticleComments(slug);
+        List<Comment> comments = this.commentService.getArticleComments(slug);
 
         Map<String, List<Comment>> responseBody = new HashMap<>();
         responseBody.put("comments", comments);
@@ -38,7 +38,7 @@ public class CommentController {
             @PathVariable String slug,
             @Valid @RequestBody CreateComment dto
     ) {
-        Comment comment = commentService.createCommentForArticle(slug, dto);
+        Comment comment = this.commentService.createCommentForArticle(slug, dto);
 
         Map<String, Comment> responseBody = new HashMap<>();
         responseBody.put("comment", comment);
@@ -46,5 +46,17 @@ public class CommentController {
         return ResponseEntity
                 .status(HttpStatus.CREATED)
                 .body(responseBody);
+    }
+
+    @DeleteMapping("/{slug}/comments/{id}")
+    public ResponseEntity<Void> deleteArticleComment(
+            @PathVariable String slug,
+            @PathVariable Long id
+    ) {
+        this.commentService.deleteArticleComment(slug, id);
+
+        return ResponseEntity
+                .status(HttpStatus.NO_CONTENT)
+                .build();
     }
 }

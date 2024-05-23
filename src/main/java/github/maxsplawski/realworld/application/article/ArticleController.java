@@ -24,7 +24,7 @@ public class ArticleController {
 
     @GetMapping("")
     public ResponseEntity<Map<String, List<Article>>> getArticles() {
-        List<Article> articles = articleService.getArticles();
+        List<Article> articles = this.articleService.getArticles();
 
         Map<String, List<Article>> responseBody = new HashMap<>();
         responseBody.put("article", articles);

@@ -7,7 +7,6 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
 @SpringBootApplication
 @ComponentScan(basePackages = {"github.maxsplawski.realworld.*"})
-@EnableJpaRepositories(basePackages = {"github.maxsplawski.realworld.domain.*"})
 public class RealWorldApplication {
 
 	public static void main(String[] args) {

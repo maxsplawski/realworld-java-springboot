@@ -22,13 +22,13 @@ public class ArticleService {
 
     public List<Article> getArticles() {
         List<Article> articles = new ArrayList<>();
-        articleRepository.findAll().forEach(articles::add);
+        this.articleRepository.findAll().forEach(articles::add);
 
         return articles;
     }
 
     public Article getArticle(String slug) {
-        return articleRepository.findBySlug(slug)
+        return this.articleRepository.findBySlug(slug)
                 .orElseThrow(() -> new EntityNotFoundException(slug));
     }
 
@@ -67,7 +67,9 @@ public class ArticleService {
 
         article.ifPresentOrElse(
                 this.articleRepository::delete,
-                () -> { throw new EntityNotFoundException(slug); }
+                () -> {
+                    throw new EntityNotFoundException(slug);
+                }
         );
     }
 }

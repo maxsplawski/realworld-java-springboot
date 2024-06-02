@@ -38,6 +38,16 @@ public class Article {
     @UpdateTimestamp
     private Instant updatedAt;
 
+    public Article() {
+    }
+
+    public Article(String title, String slug, String description, String body) {
+        this.title = title;
+        this.slug = slug;
+        this.description = description;
+        this.body = body;
+    }
+
     public Long getId() {
         return Id;
     }

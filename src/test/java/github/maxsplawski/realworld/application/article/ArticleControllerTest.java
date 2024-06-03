@@ -1,5 +1,6 @@
 package github.maxsplawski.realworld.application.article;
 
+import github.maxsplawski.realworld.application.article.dto.CreateArticle;
 import github.maxsplawski.realworld.application.article.service.ArticleService;
 import github.maxsplawski.realworld.application.comment.service.CommentService;
 import github.maxsplawski.realworld.domain.article.Article;
@@ -16,6 +17,7 @@ import java.util.List;
 import static org.hamcrest.Matchers.hasSize;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -63,5 +65,20 @@ class ArticleControllerTest {
                 .andExpect(jsonPath("article").isNotEmpty())
                 .andExpect(jsonPath("article.title").value("Article"))
                 .andExpect(jsonPath("article.slug").value("article"));
+    }
+
+    @Test
+    public void createsArticle() throws Exception {
+        CreateArticle dto = new CreateArticle("Article", "What's up", "That's what's up");
+        Article createdArticle = new Article("Article", "article", "What's up", "That's what's up");
+
+        when(this.articleService.createArticle(dto)).thenReturn(createdArticle);
+
+        mockMvc
+                .perform(post("/api/articles")
+                        .accept(MediaType.APPLICATION_JSON)
+                        .content(dto.toString()))
+                .andExpect(status().isCreated())
+                .andExpect(jsonPath("$.title").value("Article"));
     }
 }

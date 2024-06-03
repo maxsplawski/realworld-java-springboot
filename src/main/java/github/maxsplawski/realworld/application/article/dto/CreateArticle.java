@@ -12,6 +12,12 @@ public class CreateArticle {
     @NotBlank(message = "The body is required")
     private String body;
 
+    public CreateArticle(String title, String description, String body) {
+        this.title = title;
+        this.description = description;
+        this.body = body;
+    }
+
     public String getTitle() {
         return title;
     }

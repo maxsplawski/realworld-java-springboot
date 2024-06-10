@@ -27,6 +27,10 @@ public class Comment {
     @UpdateTimestamp
     private Instant updatedAt;
 
+    public Comment(String body) {
+        this.body = body;
+    }
+
     public Long getId() {
         return id;
     }

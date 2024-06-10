@@ -31,8 +31,7 @@ public class CommentService {
         Article article = this.articleRepository.findBySlug(articleSlug)
                 .orElseThrow(() -> new EntityNotFoundException(articleSlug));
 
-        Comment comment = new Comment();
-        comment.setBody(dto.getBody());
+        Comment comment = new Comment(dto.getBody());
 
         article.addComment(comment);
 

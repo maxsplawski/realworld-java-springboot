@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.Arrays;
@@ -34,6 +35,7 @@ class ArticleControllerTest {
     private CommentService commentService;
 
     @Test
+    @WithMockUser
     public void returnsListOfArticles() throws Exception {
         // TODO: Check whether creating entities without explicitly providing id and timestamps is a good practice.
         List<Article> articles = Arrays.asList(
@@ -53,6 +55,7 @@ class ArticleControllerTest {
     }
 
     @Test
+    @WithMockUser
     public void returnsArticleBySlug() throws Exception {
         Article article = new Article("Article", "article", "What's this about", "That's what's up");
 
@@ -68,6 +71,7 @@ class ArticleControllerTest {
     }
 
     @Test
+    @WithMockUser
     public void createsArticle() throws Exception {
         CreateArticle dto = new CreateArticle("Article", "What's up", "That's what's up");
         Article createdArticle = new Article("Article", "article", "What's up", "That's what's up");

@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.Arrays;
@@ -31,6 +32,7 @@ class CommentControllerTest {
     private ArticleService articleService;
 
     @Test
+    @WithMockUser
     public void returnsListOfComments() throws Exception {
         String slug = "slug";
         List<Comment> comments = Arrays.asList(new Comment("That's nice"), new Comment("Interesting"));

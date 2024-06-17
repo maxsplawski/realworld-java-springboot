@@ -33,7 +33,7 @@ public class SecurityConfiguration {
         UserDetails user = User.builder()
                 .username("User")
                 .password("password")
-                .roles("ROLE_USER")
+                .roles("USER")
                 .build();
 
         return new InMemoryUserDetailsManager(user);

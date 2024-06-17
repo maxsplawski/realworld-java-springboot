@@ -15,12 +15,14 @@ import java.util.Arrays;
 import java.util.List;
 
 import static org.hamcrest.Matchers.hasSize;
+import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.when;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 
 @WebMvcTest(CommentController.class)
+@WithMockUser
 class CommentControllerTest {
 
     @Autowired
@@ -33,12 +35,11 @@ class CommentControllerTest {
     private ArticleService articleService;
 
     @Test
-    @WithMockUser
     public void returnsListOfComments() throws Exception {
         String slug = "slug";
         List<Comment> comments = Arrays.asList(new Comment("That's nice"), new Comment("Interesting"));
 
-        when(this.commentService.getArticleComments(slug)).thenReturn(comments);
+        when(this.commentService.getArticleComments(any(String.class))).thenReturn(comments);
 
         mockMvc
                 .perform(get("/api/articles/article/comments")

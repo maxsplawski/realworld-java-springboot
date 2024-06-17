@@ -1,7 +1,5 @@
-package github.maxsplawski.realworld.domain.comment;
+package github.maxsplawski.realworld.domain.tag;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import github.maxsplawski.realworld.domain.article.Article;
 import jakarta.persistence.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
@@ -9,17 +7,13 @@ import org.hibernate.annotations.UpdateTimestamp;
 import java.time.Instant;
 
 @Entity
-public class Comment {
+public class Tag {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JsonBackReference
-    private Article article;
-
-    @Column
-    private String body;
+    @Column(unique = true)
+    private String name;
 
     @CreationTimestamp
     private Instant createdAt;
@@ -27,27 +21,27 @@ public class Comment {
     @UpdateTimestamp
     private Instant updatedAt;
 
-    public Comment() {
+    public Tag() {
     }
 
-    public Comment(String body) {
-        this.body = body;
-    }
-
-    public Long getId() {
-        return id;
+    public Tag(String name) {
+        this.name = name;
     }
 
     public void setId(Long id) {
         this.id = id;
     }
 
-    public String getBody() {
-        return body;
+    public Long getId() {
+        return id;
     }
 
-    public void setBody(String body) {
-        this.body = body;
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public Instant getCreatedAt() {
@@ -64,13 +58,5 @@ public class Comment {
 
     public void setUpdatedAt(Instant updatedAt) {
         this.updatedAt = updatedAt;
-    }
-
-    public Article getArticle() {
-        return article;
-    }
-
-    public void setArticle(Article article) {
-        this.article = article;
     }
 }

@@ -47,12 +47,15 @@ public class ArticleController {
     }
 
     @PostMapping("")
-    public ResponseEntity<Article> createArticle(@Valid @RequestBody CreateArticle dto) {
+    public ResponseEntity<Map<String, Article>> createArticle(@Valid @RequestBody CreateArticle dto) {
         Article createdArticle = this.articleService.createArticle(dto);
+
+        Map<String, Article> responseBody = new HashMap<>();
+        responseBody.put("article", createdArticle);
 
         return ResponseEntity
                 .status(HttpStatus.CREATED)
-                .body(createdArticle);
+                .body(responseBody);
     }
 
     @PatchMapping("/{slug}")

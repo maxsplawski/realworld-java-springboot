@@ -67,9 +67,9 @@ class ArticleControllerTest {
                 .perform(get("/api/articles/article")
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("article").isNotEmpty())
-                .andExpect(jsonPath("article.title").value("Article"))
-                .andExpect(jsonPath("article.slug").value("article"));
+                .andExpect(jsonPath("$.article").isNotEmpty())
+                .andExpect(jsonPath("$.article.title").value("Article"))
+                .andExpect(jsonPath("$.article.slug").value("article"));
     }
 
     @Test
@@ -90,9 +90,9 @@ class ArticleControllerTest {
                                     }
                                 """))
                 .andExpect(status().isCreated())
-                .andExpect(jsonPath("article").isNotEmpty())
-                .andExpect(jsonPath("article.title").value("Article"))
-                .andExpect(jsonPath("article.description").value("What's up"));
+                .andExpect(jsonPath("$.article").isNotEmpty())
+                .andExpect(jsonPath("$.article.title").value("Article"))
+                .andExpect(jsonPath("$.article.description").value("What's up"));
     }
 
     @Test
@@ -113,9 +113,9 @@ class ArticleControllerTest {
                                      }
                                 """))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("article").isNotEmpty())
-                .andExpect(jsonPath("article.title").value("Updated Article"))
-                .andExpect(jsonPath("article.description").value("What's up"));
+                .andExpect(jsonPath("$.article").isNotEmpty())
+                .andExpect(jsonPath("$.article.title").value("Updated Article"))
+                .andExpect(jsonPath("$.article.description").value("What's up"));
     }
 
     @Test

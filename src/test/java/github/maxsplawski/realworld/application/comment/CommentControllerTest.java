@@ -63,6 +63,7 @@ class CommentControllerTest {
                 .perform(post("/api/articles/article/comments")
                         .accept(MediaType.APPLICATION_JSON)
                         .contentType(MediaType.APPLICATION_JSON)
+                        //language=json
                         .content("""
                                             {
                                                 "body": "Nice!"

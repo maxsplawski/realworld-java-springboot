@@ -82,6 +82,7 @@ class ArticleControllerTest {
                 .perform(post("/api/articles")
                         .accept(MediaType.APPLICATION_JSON)
                         .contentType(MediaType.APPLICATION_JSON)
+                        //language=json
                         .content("""
                                     {
                                         "title": "Article",
@@ -105,6 +106,7 @@ class ArticleControllerTest {
                 .perform(patch("/api/articles/article")
                         .accept(MediaType.APPLICATION_JSON)
                         .contentType(MediaType.APPLICATION_JSON)
+                        //language=json
                         .content("""
                                     {
                                         "title": "Updated Article",

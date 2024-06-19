@@ -28,8 +28,7 @@ public class ArticleService {
     }
 
     public Article getArticle(String slug) {
-        return this.articleRepository.findBySlug(slug)
-                .orElseThrow(() -> new EntityNotFoundException(slug));
+        return this.articleRepository.findBySlugOrThrow(slug);
     }
 
     public Article createArticle(CreateArticle dto) {
@@ -63,13 +62,8 @@ public class ArticleService {
     }
 
     public void deleteArticle(String slug) {
-        Optional<Article> article = this.articleRepository.findBySlug(slug);
+        Article article = this.articleRepository.findBySlugOrThrow(slug);
 
-        article.ifPresentOrElse(
-                this.articleRepository::delete,
-                () -> {
-                    throw new EntityNotFoundException(slug);
-                }
-        );
+        this.articleRepository.delete(article);
     }
 }

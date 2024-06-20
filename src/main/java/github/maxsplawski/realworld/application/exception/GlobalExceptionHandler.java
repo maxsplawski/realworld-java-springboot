@@ -36,14 +36,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
             String fieldName = fieldError.getField();
             String errorMessage = fieldError.getDefaultMessage();
 
-            if (!errors.containsKey(fieldName)) {
-                List<String> errorMessages = new ArrayList<>();
-                errorMessages.add(errorMessage);
-                errors.put(fieldName, errorMessages);
-            } else {
-                List<String> existingErrorMessages = errors.get(fieldName);
-                existingErrorMessages.add(errorMessage);
-            }
+            errors.computeIfAbsent(fieldName, key -> new ArrayList<>()).add(errorMessage);
         });
 
         return new ResponseEntity<>(Map.of("errors", errors), HttpStatus.BAD_REQUEST);

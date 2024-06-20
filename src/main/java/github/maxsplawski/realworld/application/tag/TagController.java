@@ -7,10 +7,10 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.StreamSupport;
 
 @RestController
 @RequestMapping("/api/tags")
@@ -23,10 +23,7 @@ public class TagController {
 
     @GetMapping
     public ResponseEntity<Map<String, List<String>>> getTags() {
-        List<Tag> tags = new ArrayList<>();
-        this.tagRepository.findAll().forEach(tags::add);
-        List<String> tagNames = tags
-                .stream()
+        List<String> tagNames = StreamSupport.stream(this.tagRepository.findAll().spliterator(), false)
                 .map(Tag::getName)
                 .toList();
 

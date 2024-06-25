@@ -1,9 +1,9 @@
 package github.maxsplawski.realworld.application.comment;
 
-import github.maxsplawski.realworld.SecurityConfiguration;
 import github.maxsplawski.realworld.application.article.service.ArticleService;
 import github.maxsplawski.realworld.application.comment.dto.CreateComment;
 import github.maxsplawski.realworld.application.comment.service.CommentService;
+import github.maxsplawski.realworld.config.SecurityConfiguration;
 import github.maxsplawski.realworld.domain.comment.Comment;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

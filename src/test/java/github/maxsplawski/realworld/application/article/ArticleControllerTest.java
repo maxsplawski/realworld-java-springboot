@@ -1,10 +1,10 @@
 package github.maxsplawski.realworld.application.article;
 
-import github.maxsplawski.realworld.SecurityConfiguration;
 import github.maxsplawski.realworld.application.article.dto.CreateArticle;
 import github.maxsplawski.realworld.application.article.dto.UpdateArticle;
 import github.maxsplawski.realworld.application.article.service.ArticleService;
 import github.maxsplawski.realworld.application.comment.service.CommentService;
+import github.maxsplawski.realworld.config.SecurityConfiguration;
 import github.maxsplawski.realworld.domain.article.Article;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

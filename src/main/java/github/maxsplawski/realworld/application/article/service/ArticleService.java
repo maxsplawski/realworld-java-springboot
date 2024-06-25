@@ -34,8 +34,8 @@ public class ArticleService {
     public Article createArticle(CreateArticle dto) {
         Article article = new Article();
 
-        var title = dto.getTitle();
-        var slug = Slugger.slugifyFrom(title);
+        String title = dto.getTitle();
+        String slug = Slugger.slugifyFrom(title);
 
         article.setTitle(title);
         article.setSlug(slug);

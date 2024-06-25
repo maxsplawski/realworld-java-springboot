@@ -8,10 +8,24 @@ import java.util.Arrays;
 import java.util.Collection;
 
 public class SecurityUserDetails implements UserDetails {
-    private User user;
+    private final User user;
+
+    private String token;
 
     public SecurityUserDetails(User user) {
         this.user = user;
+    }
+
+    public User getUser() {
+        return this.user;
+    }
+
+    public String getToken() {
+        return token;
+    }
+
+    public void setToken(String token) {
+        this.token = token;
     }
 
     @Override

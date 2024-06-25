@@ -46,6 +46,7 @@ public class Article {
         this.slug = slug;
         this.description = description;
         this.body = body;
+        this.createdAt = Instant.now();
     }
 
     public Long getId() {

@@ -32,6 +32,7 @@ public class Comment {
 
     public Comment(String body) {
         this.body = body;
+        this.createdAt = Instant.now();
     }
 
     public Long getId() {

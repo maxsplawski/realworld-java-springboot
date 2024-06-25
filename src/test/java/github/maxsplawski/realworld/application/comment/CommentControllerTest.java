@@ -3,7 +3,8 @@ package github.maxsplawski.realworld.application.comment;
 import github.maxsplawski.realworld.application.article.service.ArticleService;
 import github.maxsplawski.realworld.application.comment.dto.CreateComment;
 import github.maxsplawski.realworld.application.comment.service.CommentService;
-import github.maxsplawski.realworld.config.SecurityConfiguration;
+import github.maxsplawski.realworld.config.security.JpaUserDetailsService;
+import github.maxsplawski.realworld.config.security.SecurityConfiguration;
 import github.maxsplawski.realworld.domain.comment.Comment;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,6 +31,9 @@ class CommentControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
+
+    @MockBean
+    private JpaUserDetailsService jpaUserDetailsService;
 
     @MockBean
     private CommentService commentService;

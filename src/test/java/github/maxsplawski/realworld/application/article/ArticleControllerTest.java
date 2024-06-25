@@ -4,7 +4,8 @@ import github.maxsplawski.realworld.application.article.dto.CreateArticle;
 import github.maxsplawski.realworld.application.article.dto.UpdateArticle;
 import github.maxsplawski.realworld.application.article.service.ArticleService;
 import github.maxsplawski.realworld.application.comment.service.CommentService;
-import github.maxsplawski.realworld.config.SecurityConfiguration;
+import github.maxsplawski.realworld.config.security.JpaUserDetailsService;
+import github.maxsplawski.realworld.config.security.SecurityConfiguration;
 import github.maxsplawski.realworld.domain.article.Article;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,6 +32,9 @@ class ArticleControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
+
+    @MockBean
+    private JpaUserDetailsService jpaUserDetailsService;
 
     @MockBean
     private ArticleService articleService;

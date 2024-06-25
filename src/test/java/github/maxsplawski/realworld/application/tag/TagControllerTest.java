@@ -1,6 +1,7 @@
 package github.maxsplawski.realworld.application.tag;
 
-import github.maxsplawski.realworld.config.SecurityConfiguration;
+import github.maxsplawski.realworld.config.security.JpaUserDetailsService;
+import github.maxsplawski.realworld.config.security.SecurityConfiguration;
 import github.maxsplawski.realworld.domain.tag.Tag;
 import github.maxsplawski.realworld.domain.tag.TagRepository;
 import org.junit.jupiter.api.Test;
@@ -27,6 +28,9 @@ class TagControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
+
+    @MockBean
+    private JpaUserDetailsService jpaUserDetailsService;
 
     @MockBean
     private TagRepository tagRepository;

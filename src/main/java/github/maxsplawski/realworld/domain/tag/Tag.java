@@ -26,6 +26,7 @@ public class Tag {
 
     public Tag(String name) {
         this.name = name;
+        this.createdAt = Instant.now();
     }
 
     public void setId(Long id) {

@@ -1,12 +1,12 @@
 package github.maxsplawski.realworld.application.auth;
 
 import github.maxsplawski.realworld.application.auth.dto.AuthenticatedUserResponse;
-import github.maxsplawski.realworld.application.auth.dto.CreateUserRequest;
 import github.maxsplawski.realworld.application.auth.dto.LoginRequest;
 import github.maxsplawski.realworld.application.auth.service.AuthService;
+import github.maxsplawski.realworld.application.user.dto.CreateUserRequest;
+import github.maxsplawski.realworld.application.user.service.UserService;
 import github.maxsplawski.realworld.domain.user.SecurityUserDetails;
 import github.maxsplawski.realworld.domain.user.User;
-import github.maxsplawski.realworld.domain.user.UserRepository;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -22,11 +22,11 @@ import java.util.Map;
 @RestController
 public class AuthController {
     private final AuthService authService;
-    private final UserRepository userRepository;
+    private final UserService userService;
 
-    public AuthController(AuthService authService, UserRepository userRepository) {
+    public AuthController(AuthService authService, UserService userService) {
         this.authService = authService;
-        this.userRepository = userRepository;
+        this.userService = userService;
     }
 
     @PostMapping("/login")
@@ -47,7 +47,7 @@ public class AuthController {
 
     @PostMapping("/register")
     public ResponseEntity<Map<String, AuthenticatedUserResponse>> register(@Valid @RequestBody CreateUserRequest registerRequest) {
-        this.authService.createUser(registerRequest);
+        this.userService.createUser(registerRequest);
         SecurityUserDetails userDetails = this.authService.login(new LoginRequest(registerRequest.getUsername(), registerRequest.getPassword()));
 
         Map<String, AuthenticatedUserResponse> responseBody = new HashMap<>();
@@ -67,7 +67,7 @@ public class AuthController {
             WebRequest request,
             Principal principal
     ) {
-        User user = this.userRepository.findByUsernameOrThrow(principal.getName());
+        User user = this.userService.getUser(principal.getName());
         SecurityUserDetails userDetails = new SecurityUserDetails(user);
 
         Map<String, AuthenticatedUserResponse> responseBody = new HashMap<>();

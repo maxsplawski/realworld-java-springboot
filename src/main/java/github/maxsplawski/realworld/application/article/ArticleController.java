@@ -1,6 +1,6 @@
 package github.maxsplawski.realworld.application.article;
 
-import github.maxsplawski.realworld.application.article.dto.ArticleListResponse;
+import github.maxsplawski.realworld.application.article.dto.ArticleListData;
 import github.maxsplawski.realworld.application.article.dto.CreateArticleRequest;
 import github.maxsplawski.realworld.application.article.dto.UpdateArticleRequest;
 import github.maxsplawski.realworld.application.article.service.ArticleService;
@@ -24,8 +24,8 @@ public class ArticleController {
     }
 
     @GetMapping("")
-    public ResponseEntity<ArticleListResponse> getArticles(Pageable pageable) {
-        ArticleListResponse articles = this.articleService.getArticles(pageable);
+    public ResponseEntity<ArticleListData> getArticles(Pageable pageable) {
+        ArticleListData articles = this.articleService.getArticles(pageable);
 
         return ResponseEntity
                 .status(HttpStatus.OK)

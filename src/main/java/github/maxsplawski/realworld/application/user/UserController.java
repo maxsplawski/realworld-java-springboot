@@ -1,6 +1,6 @@
 package github.maxsplawski.realworld.application.user;
 
-import github.maxsplawski.realworld.application.auth.dto.AuthenticatedUserResponse;
+import github.maxsplawski.realworld.application.auth.dto.AuthenticatedUserData;
 import github.maxsplawski.realworld.application.user.dto.Profile;
 import github.maxsplawski.realworld.application.user.dto.UpdateUserRequest;
 import github.maxsplawski.realworld.application.user.service.UserService;
@@ -24,21 +24,22 @@ public class UserController {
     }
 
     @PutMapping("/api/user")
-    public ResponseEntity<Map<String, AuthenticatedUserResponse>> updateUser(
+    public ResponseEntity<Map<String, AuthenticatedUserData>> updateUser(
             WebRequest request,
             Principal principal,
             @Valid @RequestBody UpdateUserRequest updateUserRequest
     ) {
         User updatedUser = this.userService.updateUser(principal.getName(), updateUserRequest);
 
-        Map<String, AuthenticatedUserResponse> responseBody = new HashMap<>();
-        responseBody.put("user", new AuthenticatedUserResponse(
-                updatedUser.getEmail(),
-                request.getHeader("Authorization"),
-                updatedUser.getUsername(),
-                updatedUser.getBio(),
-                updatedUser.getImage()
-        ));
+        Map<String, AuthenticatedUserData> responseBody = new HashMap<>();
+        responseBody.put("user", AuthenticatedUserData.builder()
+                .email(updatedUser.getEmail())
+                .token(request.getHeader("Authorization"))
+                .username(updatedUser.getUsername())
+                .bio(updatedUser.getBio())
+                .image(updatedUser.getImage())
+                .build()
+        );
 
         return ResponseEntity.ok().body(responseBody);
     }

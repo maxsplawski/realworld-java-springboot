@@ -4,12 +4,12 @@ import github.maxsplawski.realworld.domain.article.Article;
 
 import java.util.List;
 
-public class ArticleListResponse {
+public class ArticleListData {
     private final List<Article> articles;
 
     private final int articlesCount;
 
-    public ArticleListResponse(Builder builder) {
+    public ArticleListData(Builder builder) {
         this.articles = builder.articles;
         this.articlesCount = builder.articlesCount;
     }
@@ -44,8 +44,8 @@ public class ArticleListResponse {
             return this;
         }
 
-        public ArticleListResponse build() {
-            return new ArticleListResponse(this);
+        public ArticleListData build() {
+            return new ArticleListData(this);
         }
     }
 }

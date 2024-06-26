@@ -1,11 +1,15 @@
 package github.maxsplawski.realworld.application.auth.service;
 
+import github.maxsplawski.realworld.application.auth.dto.AuthenticatedUserData;
 import github.maxsplawski.realworld.application.auth.dto.LoginRequest;
 import github.maxsplawski.realworld.domain.user.SecurityUserDetails;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
+
+import java.util.HashMap;
+import java.util.Map;
 
 @Service
 public class AuthService {
@@ -26,5 +30,11 @@ public class AuthService {
         userDetails.setToken(token);
 
         return userDetails;
+    }
+
+    public Map<String, AuthenticatedUserData> wrapAuthenticatedUserData(AuthenticatedUserData data) {
+        Map<String, AuthenticatedUserData> wrapper = new HashMap<>();
+        wrapper.put("user", data);
+        return wrapper;
     }
 }

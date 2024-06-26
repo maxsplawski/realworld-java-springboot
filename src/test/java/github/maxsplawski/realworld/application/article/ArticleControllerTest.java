@@ -1,6 +1,6 @@
 package github.maxsplawski.realworld.application.article;
 
-import github.maxsplawski.realworld.application.article.dto.ArticleListResponse;
+import github.maxsplawski.realworld.application.article.dto.ArticleListData;
 import github.maxsplawski.realworld.application.article.dto.CreateArticleRequest;
 import github.maxsplawski.realworld.application.article.dto.UpdateArticleRequest;
 import github.maxsplawski.realworld.application.article.service.ArticleService;
@@ -49,7 +49,7 @@ class ArticleControllerTest {
         List<Article> articles = Arrays.asList(
                 new Article("Article 1", "article-1", "What's this about", "That's what's up"),
                 new Article("Article 2", "article-2", "What's this about", "That's what's up"));
-        ArticleListResponse articlesList = ArticleListResponse.builder()
+        ArticleListData articlesList = ArticleListData.builder()
                 .articles(articles)
                 .articlesCount(2)
                 .build();

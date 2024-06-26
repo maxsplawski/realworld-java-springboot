@@ -7,6 +7,7 @@ import org.hibernate.annotations.UpdateTimestamp;
 import java.time.Instant;
 
 @Entity
+@Table(name = "tags")
 public class Tag {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id

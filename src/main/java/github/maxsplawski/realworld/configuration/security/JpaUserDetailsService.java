@@ -1,4 +1,4 @@
-package github.maxsplawski.realworld.config.security;
+package github.maxsplawski.realworld.configuration.security;
 
 import github.maxsplawski.realworld.domain.user.SecurityUserDetails;
 import github.maxsplawski.realworld.domain.user.UserRepository;

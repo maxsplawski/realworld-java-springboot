@@ -1,4 +1,4 @@
-package github.maxsplawski.realworld.config.security;
+package github.maxsplawski.realworld.configuration.security;
 
 import com.nimbusds.jose.jwk.JWK;
 import com.nimbusds.jose.jwk.JWKSet;
@@ -6,7 +6,7 @@ import com.nimbusds.jose.jwk.RSAKey;
 import com.nimbusds.jose.jwk.source.ImmutableJWKSet;
 import com.nimbusds.jose.jwk.source.JWKSource;
 import com.nimbusds.jose.proc.SecurityContext;
-import github.maxsplawski.realworld.config.RsaKeyProperties;
+import github.maxsplawski.realworld.configuration.RsaKeyProperties;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

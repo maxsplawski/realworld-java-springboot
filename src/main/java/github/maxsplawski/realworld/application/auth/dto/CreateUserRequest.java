@@ -3,7 +3,7 @@ package github.maxsplawski.realworld.application.auth.dto;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 
-public class RegisterRequest {
+public class CreateUserRequest {
     @NotBlank
     private String username;
 

@@ -1,7 +1,7 @@
 package github.maxsplawski.realworld.application.auth.service;
 
+import github.maxsplawski.realworld.application.auth.dto.CreateUserRequest;
 import github.maxsplawski.realworld.application.auth.dto.LoginRequest;
-import github.maxsplawski.realworld.application.auth.dto.RegisterRequest;
 import github.maxsplawski.realworld.domain.user.SecurityUserDetails;
 import github.maxsplawski.realworld.domain.user.User;
 import github.maxsplawski.realworld.domain.user.UserRepository;
@@ -36,27 +36,18 @@ public class AuthService {
         return userDetails;
     }
 
-    public SecurityUserDetails register(RegisterRequest registerRequest) {
+    public User createUser(CreateUserRequest createUserRequest) {
         User user = new User();
 
-        String encodedPassword = new BCryptPasswordEncoder().encode(registerRequest.getPassword());
+        String encodedPassword = new BCryptPasswordEncoder().encode(createUserRequest.getPassword());
 
-        user.setUsername(registerRequest.getUsername());
-        user.setEmail(registerRequest.getEmail());
+        user.setUsername(createUserRequest.getUsername());
+        user.setEmail(createUserRequest.getEmail());
         user.setPassword(encodedPassword);
-        Optional.ofNullable(registerRequest.getBio()).ifPresent(user::setBio);
-        Optional.ofNullable(registerRequest.getImage()).ifPresent(user::setImage);
+        Optional.ofNullable(createUserRequest.getBio()).ifPresent(user::setBio);
+        Optional.ofNullable(createUserRequest.getImage()).ifPresent(user::setImage);
         user.setRoles("ROLE_USER");
 
-        this.userRepository.save(user);
-
-        Authentication authenticationRequest = UsernamePasswordAuthenticationToken.unauthenticated(user.getUsername(), user.getPassword());
-        Authentication authenticationResponse = this.authenticationManager.authenticate(authenticationRequest);
-
-        String token = this.jwtTokenService.generateToken(authenticationResponse);
-        SecurityUserDetails userDetails = (SecurityUserDetails) authenticationResponse.getPrincipal();
-        userDetails.setToken(token);
-
-        return userDetails;
+        return this.userRepository.save(user);
     }
 }

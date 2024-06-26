@@ -3,7 +3,7 @@ package github.maxsplawski.realworld.application.auth.dto;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 
-public class LoginResponse {
+public class AuthenticatedUserResponse {
     @NotBlank
     @Email
     private String email;
@@ -18,7 +18,7 @@ public class LoginResponse {
 
     private String image;
 
-    public LoginResponse(String email, String token, String username, String bio, String image) {
+    public AuthenticatedUserResponse(String email, String token, String username, String bio, String image) {
         this.email = email;
         this.token = token;
         this.username = username;

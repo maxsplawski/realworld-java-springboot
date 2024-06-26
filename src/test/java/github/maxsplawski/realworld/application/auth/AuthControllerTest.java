@@ -2,6 +2,7 @@ package github.maxsplawski.realworld.application.auth;
 
 import github.maxsplawski.realworld.application.auth.dto.LoginRequest;
 import github.maxsplawski.realworld.application.auth.service.AuthService;
+import github.maxsplawski.realworld.application.user.service.UserService;
 import github.maxsplawski.realworld.config.security.JpaUserDetailsService;
 import github.maxsplawski.realworld.config.security.SecurityConfiguration;
 import github.maxsplawski.realworld.domain.user.SecurityUserDetails;
@@ -12,6 +13,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -19,30 +21,55 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@ContextConfiguration(classes = {AuthController.class, SecurityConfiguration.class})
 @WebMvcTest(AuthController.class)
+@ContextConfiguration(classes = {AuthController.class, SecurityConfiguration.class})
 class AuthControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
 
     @MockBean
+    private AuthService authService;
+
+    @MockBean
     private JpaUserDetailsService jpaUserDetailsService;
 
     @MockBean
-    private AuthService authService;
+    private UserService userService;
 
     @Test
     public void returnsUnauthorizedResponseForAnUnauthenticatedUser() throws Exception {
         this.mockMvc
-                .perform(get("/api/articles"))
+                .perform(get("/api/user"))
                 .andExpect(status().isUnauthorized());
     }
 
     @Test
-    public void returnsATokenFromLoginEndpoint() throws Exception {
+    @WithMockUser
+    public void returnsAnAuthenticatedUser() throws Exception {
+        User user = new User(
+                "test.user@mail.com",
+                "TestUser",
+                "123",
+                "Hello, there!",
+                "image.com/image",
+                "ROLE_USER"
+        );
+
+        when(this.userService.getUser(any(String.class))).thenReturn(user);
+
+        this.mockMvc
+                .perform(get("/api/user"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.user").isNotEmpty())
+                .andExpect(jsonPath("$.user.username").value("TestUser"));
+    }
+
+    @Test
+    public void returnsAnAuthenticatedResponseFromLoginEndpoint() throws Exception {
         User user = new User(
                 "john.doe@mail.com",
                 "John Doe",
@@ -67,6 +94,7 @@ class AuthControllerTest {
                                     }
                                 """))
                 .andExpect(status().isOk())
-                .andReturn();
+                .andExpect(jsonPath("$.user").isNotEmpty())
+                .andExpect(jsonPath("$.user.username").value("John Doe"));
     }
 }

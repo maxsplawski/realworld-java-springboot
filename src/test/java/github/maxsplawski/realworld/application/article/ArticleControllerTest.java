@@ -25,8 +25,8 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@ContextConfiguration(classes = {ArticleController.class, SecurityConfiguration.class})
 @WebMvcTest(ArticleController.class)
+@ContextConfiguration(classes = {ArticleController.class, SecurityConfiguration.class})
 @WithMockUser
 class ArticleControllerTest {
 

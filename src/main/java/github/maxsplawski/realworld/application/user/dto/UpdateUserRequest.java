@@ -1,17 +1,13 @@
-package github.maxsplawski.realworld.application.auth.dto;
+package github.maxsplawski.realworld.application.user.dto;
 
 import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotBlank;
 
-public class CreateUserRequest {
-    @NotBlank
+public class UpdateUserRequest {
     private String username;
 
-    @NotBlank
     @Email
     private String email;
 
-    @NotBlank
     private String password;
 
     private String bio;

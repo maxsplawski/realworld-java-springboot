@@ -1,8 +1,8 @@
 package github.maxsplawski.realworld.application.article.service;
 
-import github.maxsplawski.realworld.application.article.dto.ArticleList;
-import github.maxsplawski.realworld.application.article.dto.CreateArticle;
-import github.maxsplawski.realworld.application.article.dto.UpdateArticle;
+import github.maxsplawski.realworld.application.article.dto.ArticleListResponse;
+import github.maxsplawski.realworld.application.article.dto.CreateArticleRequest;
+import github.maxsplawski.realworld.application.article.dto.UpdateArticleRequest;
 import github.maxsplawski.realworld.domain.article.Article;
 import github.maxsplawski.realworld.domain.article.ArticleRepository;
 import github.maxsplawski.realworld.util.string.Slugger;
@@ -23,7 +23,7 @@ public class ArticleService {
         this.articleRepository = articleRepository;
     }
 
-    public ArticleList getArticles(Pageable pageable) {
+    public ArticleListResponse getArticles(Pageable pageable) {
         Page<Article> page = this.articleRepository
                 .findAll(
                         PageRequest.of(
@@ -32,39 +32,41 @@ public class ArticleService {
                                 Sort.by(Sort.Direction.DESC, "createdAt")
                         )
                 );
-        ArticleList articleList = new ArticleList(page.toList(), page.getNumberOfElements());
 
-        return articleList;
+        return ArticleListResponse.builder()
+                .articles(page.toList())
+                .articlesCount(page.getTotalPages())
+                .build();
     }
 
     public Article getArticle(String slug) {
         return this.articleRepository.findBySlugOrThrow(slug);
     }
 
-    public Article createArticle(CreateArticle dto) {
+    public Article createArticle(CreateArticleRequest createArticleRequest) {
         Article article = new Article();
 
-        String title = dto.getTitle();
+        String title = createArticleRequest.getTitle();
         String slug = Slugger.slugifyFrom(title);
 
         article.setTitle(title);
         article.setSlug(slug);
-        article.setDescription(dto.getDescription());
-        article.setBody(dto.getBody());
+        article.setDescription(createArticleRequest.getDescription());
+        article.setBody(createArticleRequest.getBody());
 
         return this.articleRepository.save(article);
     }
 
-    public Article updateArticle(String slug, UpdateArticle dto) {
+    public Article updateArticle(String slug, UpdateArticleRequest updateArticleRequest) {
         return this.articleRepository.findBySlug(slug)
                 .map(article -> {
-                    Optional.ofNullable(dto.getTitle()).ifPresent(title -> {
+                    Optional.ofNullable(updateArticleRequest.getTitle()).ifPresent(title -> {
                         article.setTitle(title);
                         article.setSlug(Slugger.slugifyFrom(title));
                     });
 
-                    Optional.ofNullable(dto.getDescription()).ifPresent(article::setDescription);
-                    Optional.ofNullable(dto.getBody()).ifPresent(article::setBody);
+                    Optional.ofNullable(updateArticleRequest.getDescription()).ifPresent(article::setDescription);
+                    Optional.ofNullable(updateArticleRequest.getBody()).ifPresent(article::setBody);
 
                     return this.articleRepository.save(article);
                 })

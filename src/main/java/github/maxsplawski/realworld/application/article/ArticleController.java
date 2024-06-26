@@ -1,8 +1,8 @@
 package github.maxsplawski.realworld.application.article;
 
-import github.maxsplawski.realworld.application.article.dto.ArticleList;
-import github.maxsplawski.realworld.application.article.dto.CreateArticle;
-import github.maxsplawski.realworld.application.article.dto.UpdateArticle;
+import github.maxsplawski.realworld.application.article.dto.ArticleListResponse;
+import github.maxsplawski.realworld.application.article.dto.CreateArticleRequest;
+import github.maxsplawski.realworld.application.article.dto.UpdateArticleRequest;
 import github.maxsplawski.realworld.application.article.service.ArticleService;
 import github.maxsplawski.realworld.domain.article.Article;
 import jakarta.validation.Valid;
@@ -24,8 +24,8 @@ public class ArticleController {
     }
 
     @GetMapping("")
-    public ResponseEntity<ArticleList> getArticles(Pageable pageable) {
-        ArticleList articles = this.articleService.getArticles(pageable);
+    public ResponseEntity<ArticleListResponse> getArticles(Pageable pageable) {
+        ArticleListResponse articles = this.articleService.getArticles(pageable);
 
         return ResponseEntity
                 .status(HttpStatus.OK)
@@ -45,8 +45,8 @@ public class ArticleController {
     }
 
     @PostMapping("")
-    public ResponseEntity<Map<String, Article>> createArticle(@Valid @RequestBody CreateArticle dto) {
-        Article createdArticle = this.articleService.createArticle(dto);
+    public ResponseEntity<Map<String, Article>> createArticle(@Valid @RequestBody CreateArticleRequest createArticleRequest) {
+        Article createdArticle = this.articleService.createArticle(createArticleRequest);
 
         Map<String, Article> responseBody = new HashMap<>();
         responseBody.put("article", createdArticle);
@@ -59,9 +59,9 @@ public class ArticleController {
     @PatchMapping("/{slug}")
     public ResponseEntity<Map<String, Article>> updateArticle(
             @PathVariable String slug,
-            @Valid @RequestBody UpdateArticle dto
+            @Valid @RequestBody UpdateArticleRequest updateArticleRequest
     ) {
-        Article updatedArticle = this.articleService.updateArticle(slug, dto);
+        Article updatedArticle = this.articleService.updateArticle(slug, updateArticleRequest);
 
         Map<String, Article> responseBody = new HashMap<>();
         responseBody.put("article", updatedArticle);

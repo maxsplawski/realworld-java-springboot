@@ -1,8 +1,8 @@
 package github.maxsplawski.realworld.application.article;
 
-import github.maxsplawski.realworld.application.article.dto.ArticleList;
-import github.maxsplawski.realworld.application.article.dto.CreateArticle;
-import github.maxsplawski.realworld.application.article.dto.UpdateArticle;
+import github.maxsplawski.realworld.application.article.dto.ArticleListResponse;
+import github.maxsplawski.realworld.application.article.dto.CreateArticleRequest;
+import github.maxsplawski.realworld.application.article.dto.UpdateArticleRequest;
 import github.maxsplawski.realworld.application.article.service.ArticleService;
 import github.maxsplawski.realworld.application.comment.service.CommentService;
 import github.maxsplawski.realworld.configuration.security.JpaUserDetailsService;
@@ -46,11 +46,13 @@ class ArticleControllerTest {
 
     @Test
     public void returnsListOfArticles() throws Exception {
-        // TODO: Check whether creating entities without explicitly providing id and timestamps is a good practice.
         List<Article> articles = Arrays.asList(
                 new Article("Article 1", "article-1", "What's this about", "That's what's up"),
                 new Article("Article 2", "article-2", "What's this about", "That's what's up"));
-        ArticleList articlesList = new ArticleList(articles, 2);
+        ArticleListResponse articlesList = ArticleListResponse.builder()
+                .articles(articles)
+                .articlesCount(2)
+                .build();
 
         when(this.articleService.getArticles(any(Pageable.class))).thenReturn(articlesList);
 
@@ -83,7 +85,7 @@ class ArticleControllerTest {
     public void createsArticle() throws Exception {
         Article createdArticle = new Article("Article", "article", "What's up", "That's what's up");
 
-        when(this.articleService.createArticle(any(CreateArticle.class))).thenReturn(createdArticle);
+        when(this.articleService.createArticle(any(CreateArticleRequest.class))).thenReturn(createdArticle);
 
         mockMvc
                 .perform(post("/api/articles")
@@ -107,7 +109,7 @@ class ArticleControllerTest {
     public void updatesAnArticle() throws Exception {
         Article updatedArticle = new Article("Updated Article", "updated-article", "What's up", "That's what's up");
 
-        when(this.articleService.updateArticle(any(String.class), any(UpdateArticle.class))).thenReturn(updatedArticle);
+        when(this.articleService.updateArticle(any(String.class), any(UpdateArticleRequest.class))).thenReturn(updatedArticle);
 
         mockMvc
                 .perform(patch("/api/articles/article")

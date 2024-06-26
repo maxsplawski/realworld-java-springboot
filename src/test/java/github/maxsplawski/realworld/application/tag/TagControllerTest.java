@@ -1,7 +1,7 @@
 package github.maxsplawski.realworld.application.tag;
 
-import github.maxsplawski.realworld.config.security.JpaUserDetailsService;
-import github.maxsplawski.realworld.config.security.SecurityConfiguration;
+import github.maxsplawski.realworld.configuration.security.JpaUserDetailsService;
+import github.maxsplawski.realworld.configuration.security.SecurityConfiguration;
 import github.maxsplawski.realworld.domain.tag.Tag;
 import github.maxsplawski.realworld.domain.tag.TagRepository;
 import org.junit.jupiter.api.Test;

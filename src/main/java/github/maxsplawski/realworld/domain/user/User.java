@@ -1,10 +1,14 @@
 package github.maxsplawski.realworld.domain.user;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.Instant;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name = "users")
@@ -12,6 +16,19 @@ public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(
+            name = "followers",
+            joinColumns = @JoinColumn(name = "follower_id"),
+            inverseJoinColumns = @JoinColumn(name = "followee_id")
+    )
+    @JsonManagedReference
+    private Set<User> followedUsers = new HashSet<>();
+
+    @ManyToMany(fetch = FetchType.LAZY, mappedBy = "followedUsers")
+    @JsonBackReference
+    private Set<User> followers = new HashSet<>();
 
     @Column(unique = true)
     private String email;
@@ -56,6 +73,32 @@ public class User {
 
     public Long getId() {
         return id;
+    }
+
+    public Set<User> getFollowedUsers() {
+        return followedUsers;
+    }
+
+    public void setFollowedUsers(Set<User> followedUsers) {
+        this.followedUsers = followedUsers;
+    }
+
+    public Set<User> getFollowers() {
+        return followers;
+    }
+
+    public void setFollowers(Set<User> followers) {
+        this.followers = followers;
+    }
+
+    public void follow(User user) {
+        this.followedUsers.add(user);
+        user.getFollowers().add(this);
+    }
+
+    public void unfollow(User user) {
+        this.followedUsers.remove(user);
+        user.getFollowers().remove(this);
     }
 
     public String getEmail() {

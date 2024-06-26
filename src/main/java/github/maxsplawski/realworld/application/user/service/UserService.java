@@ -1,13 +1,16 @@
 package github.maxsplawski.realworld.application.user.service;
 
 import github.maxsplawski.realworld.application.user.dto.CreateUserRequest;
+import github.maxsplawski.realworld.application.user.dto.Profile;
 import github.maxsplawski.realworld.application.user.dto.UpdateUserRequest;
+import github.maxsplawski.realworld.domain.user.SecurityUserDetails;
 import github.maxsplawski.realworld.domain.user.User;
 import github.maxsplawski.realworld.domain.user.UserRepository;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.security.Principal;
 import java.util.Optional;
 
 @Service
@@ -52,5 +55,28 @@ public class UserService {
                     return this.userRepository.save(user);
                 })
                 .orElseThrow(() -> new EntityNotFoundException(username));
+    }
+
+    public Profile getUserProfile(String username, Optional<Principal> principal) {
+        User queriedUser = this.userRepository.findByUsernameOrThrow(username);
+        Profile profile = new Profile();
+        profile.setFollowing(false);
+
+        principal.ifPresent(p -> {
+                    SecurityUserDetails authenticatedUserDetails = (SecurityUserDetails) p;
+                    User authenticatedUser = authenticatedUserDetails.getUser();
+                    profile.setFollowing(this.isFollowingUser(authenticatedUser, queriedUser));
+                }
+        );
+
+        profile.setUsername(queriedUser.getUsername());
+        profile.setBio(queriedUser.getBio());
+        profile.setImage(queriedUser.getImage());
+
+        return profile;
+    }
+
+    private boolean isFollowingUser(User follower, User followee) {
+        return false;
     }
 }

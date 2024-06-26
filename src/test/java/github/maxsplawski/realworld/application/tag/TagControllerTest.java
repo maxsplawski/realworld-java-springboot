@@ -21,8 +21,8 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@ContextConfiguration(classes = {TagController.class, SecurityConfiguration.class})
 @WebMvcTest(TagController.class)
+@ContextConfiguration(classes = {TagController.class, SecurityConfiguration.class})
 @WithMockUser
 class TagControllerTest {
 
@@ -45,10 +45,10 @@ class TagControllerTest {
                 .perform(get("/api/tags")
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("tags").isArray())
-                .andExpect(jsonPath("tags", hasSize(2)))
-                .andExpect(jsonPath("tags[0]").value("java"))
-                .andExpect(jsonPath("tags[1]").value("rust"));
+                .andExpect(jsonPath("$.tags").isArray())
+                .andExpect(jsonPath("$.tags", hasSize(2)))
+                .andExpect(jsonPath("$.tags[0]").value("java"))
+                .andExpect(jsonPath("$.tags[1]").value("rust"));
         ;
     }
 }

@@ -1,6 +1,6 @@
 package github.maxsplawski.realworld.application.article.service;
 
-import github.maxsplawski.realworld.application.article.dto.ArticleListResponse;
+import github.maxsplawski.realworld.application.article.dto.ArticleListData;
 import github.maxsplawski.realworld.application.article.dto.CreateArticleRequest;
 import github.maxsplawski.realworld.application.article.dto.UpdateArticleRequest;
 import github.maxsplawski.realworld.domain.article.Article;
@@ -23,7 +23,7 @@ public class ArticleService {
         this.articleRepository = articleRepository;
     }
 
-    public ArticleListResponse getArticles(Pageable pageable) {
+    public ArticleListData getArticles(Pageable pageable) {
         Page<Article> page = this.articleRepository
                 .findAll(
                         PageRequest.of(
@@ -33,7 +33,7 @@ public class ArticleService {
                         )
                 );
 
-        return ArticleListResponse.builder()
+        return ArticleListData.builder()
                 .articles(page.toList())
                 .articlesCount(page.getTotalPages())
                 .build();

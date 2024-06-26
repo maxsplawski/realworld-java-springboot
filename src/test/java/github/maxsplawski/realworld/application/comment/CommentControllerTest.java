@@ -1,7 +1,7 @@
 package github.maxsplawski.realworld.application.comment;
 
 import github.maxsplawski.realworld.application.article.service.ArticleService;
-import github.maxsplawski.realworld.application.comment.dto.CreateComment;
+import github.maxsplawski.realworld.application.comment.dto.CreateCommentRequest;
 import github.maxsplawski.realworld.application.comment.service.CommentService;
 import github.maxsplawski.realworld.configuration.security.JpaUserDetailsService;
 import github.maxsplawski.realworld.configuration.security.SecurityConfiguration;
@@ -59,9 +59,9 @@ class CommentControllerTest {
 
     @Test
     public void createsACommentForAnArticle() throws Exception {
-        Comment createcComment = new Comment("Nice!");
+        Comment createdComment = new Comment("Nice!");
 
-        when(this.commentService.createCommentForArticle(any(String.class), any(CreateComment.class))).thenReturn(createcComment);
+        when(this.commentService.createCommentForArticle(any(String.class), any(CreateCommentRequest.class))).thenReturn(createdComment);
 
         mockMvc
                 .perform(post("/api/articles/article/comments")

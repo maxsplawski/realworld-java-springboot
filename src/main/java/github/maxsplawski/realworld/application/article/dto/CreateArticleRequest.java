@@ -18,7 +18,8 @@ public class CreateArticleRequest {
     public CreateArticleRequest(
             @JsonProperty("title") String title,
             @JsonProperty("description") String description,
-            @JsonProperty("body") String body) {
+            @JsonProperty("body") String body
+    ) {
         this.title = title;
         this.description = description;
         this.body = body;

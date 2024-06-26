@@ -1,7 +1,7 @@
 package github.maxsplawski.realworld.application.user.service;
 
 import github.maxsplawski.realworld.application.user.dto.CreateUserRequest;
-import github.maxsplawski.realworld.application.user.dto.Profile;
+import github.maxsplawski.realworld.application.user.dto.ProfileData;
 import github.maxsplawski.realworld.application.user.dto.UpdateUserRequest;
 import github.maxsplawski.realworld.domain.user.SecurityUserDetails;
 import github.maxsplawski.realworld.domain.user.User;
@@ -57,9 +57,9 @@ public class UserService {
                 .orElseThrow(() -> new EntityNotFoundException(username));
     }
 
-    public Profile getUserProfile(String username, Optional<Principal> principal) {
+    public ProfileData getUserProfile(String username, Optional<Principal> principal) {
         User queriedUser = this.userRepository.findByUsernameOrThrow(username);
-        Profile profile = new Profile();
+        ProfileData profile = new ProfileData();
         profile.setFollowing(false);
 
         principal.ifPresent(p -> {

@@ -1,7 +1,7 @@
 package github.maxsplawski.realworld.application.user;
 
 import github.maxsplawski.realworld.application.auth.dto.AuthenticatedUserData;
-import github.maxsplawski.realworld.application.user.dto.Profile;
+import github.maxsplawski.realworld.application.user.dto.ProfileData;
 import github.maxsplawski.realworld.application.user.dto.UpdateUserRequest;
 import github.maxsplawski.realworld.application.user.service.UserService;
 import github.maxsplawski.realworld.domain.user.User;
@@ -45,13 +45,13 @@ public class UserController {
     }
 
     @GetMapping("/api/profiles/{username}")
-    public ResponseEntity<Map<String, Profile>> getUserProfile(
+    public ResponseEntity<Map<String, ProfileData>> getUserProfile(
             Principal principal,
             @PathVariable String username
     ) {
-        Profile profile = this.userService.getUserProfile(username, Optional.ofNullable(principal));
+        ProfileData profile = this.userService.getUserProfile(username, Optional.ofNullable(principal));
 
-        Map<String, Profile> responseBody = new HashMap<>();
+        Map<String, ProfileData> responseBody = new HashMap<>();
         responseBody.put("profile", profile);
 
         return ResponseEntity.ok().body(responseBody);

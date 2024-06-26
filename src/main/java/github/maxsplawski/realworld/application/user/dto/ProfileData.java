@@ -1,6 +1,6 @@
 package github.maxsplawski.realworld.application.user.dto;
 
-public class Profile {
+public class ProfileData {
     private String username;
 
     private String bio;
@@ -9,10 +9,10 @@ public class Profile {
 
     private boolean following;
 
-    public Profile() {
+    public ProfileData() {
     }
 
-    public Profile(String username, String bio, String image, boolean following) {
+    public ProfileData(String username, String bio, String image, boolean following) {
         this.username = username;
         this.bio = bio;
         this.image = image;

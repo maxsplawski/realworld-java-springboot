@@ -1,16 +1,17 @@
 package github.maxsplawski.realworld.application.article;
 
+import github.maxsplawski.realworld.application.article.dto.ArticleList;
 import github.maxsplawski.realworld.application.article.dto.CreateArticle;
 import github.maxsplawski.realworld.application.article.dto.UpdateArticle;
 import github.maxsplawski.realworld.application.article.service.ArticleService;
 import github.maxsplawski.realworld.domain.article.Article;
 import jakarta.validation.Valid;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -23,15 +24,12 @@ public class ArticleController {
     }
 
     @GetMapping("")
-    public ResponseEntity<Map<String, List<Article>>> getArticles() {
-        List<Article> articles = this.articleService.getArticles();
-
-        Map<String, List<Article>> responseBody = new HashMap<>();
-        responseBody.put("article", articles);
+    public ResponseEntity<ArticleList> getArticles(Pageable pageable) {
+        ArticleList articles = this.articleService.getArticles(pageable);
 
         return ResponseEntity
                 .status(HttpStatus.OK)
-                .body(responseBody);
+                .body(articles);
     }
 
     @GetMapping("/{slug}")

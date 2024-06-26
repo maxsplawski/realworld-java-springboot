@@ -32,4 +32,13 @@ public class UpdateArticleRequest {
     public String getBody() {
         return body;
     }
+
+    @Override
+    public String toString() {
+        return "UpdateArticleRequest{" +
+                "title='" + title + '\'' +
+                ", description='" + description + '\'' +
+                ", body='" + body + '\'' +
+                '}';
+    }
 }

@@ -55,6 +55,9 @@ public class ProfileData {
 
         private boolean following;
 
+        public Builder() {
+        }
+
         public Builder username(String username) {
             this.username = username;
             return this;

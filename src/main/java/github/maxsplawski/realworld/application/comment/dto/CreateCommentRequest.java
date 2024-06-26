@@ -16,4 +16,11 @@ public class CreateCommentRequest {
     public CreateCommentRequest(@JsonProperty("body") String body) {
         this.body = body;
     }
+
+    @Override
+    public String toString() {
+        return "CreateCommentRequest{" +
+                "body='" + body + '\'' +
+                '}';
+    }
 }

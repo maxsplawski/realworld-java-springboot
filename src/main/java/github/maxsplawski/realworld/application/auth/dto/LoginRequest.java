@@ -1,18 +1,21 @@
 package github.maxsplawski.realworld.application.auth.dto;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.constraints.NotBlank;
 
 public class LoginRequest {
     @NotBlank
-    private String username;
+    private final String username;
 
     @NotBlank
-    private String password;
+    private final String password;
 
-    public LoginRequest() {
-    }
-
-    public LoginRequest(String username, String password) {
+    @JsonCreator
+    public LoginRequest(
+            @JsonProperty("username") String username,
+            @JsonProperty("password") String password
+    ) {
         this.username = username;
         this.password = password;
     }
@@ -21,15 +24,15 @@ public class LoginRequest {
         return username;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
     public String getPassword() {
         return password;
     }
 
-    public void setPassword(String password) {
-        this.password = password;
+    @Override
+    public String toString() {
+        return "LoginRequest{" +
+                "username='" + username + '\'' +
+                ", password='RAW_PASSWORD'" +
+                '}';
     }
 }

@@ -26,6 +26,14 @@ public class ArticleListData {
         return new Builder();
     }
 
+    @Override
+    public String toString() {
+        return "ArticleListData{" +
+                "articles=" + articles +
+                ", articlesCount=" + articlesCount +
+                '}';
+    }
+
     public static class Builder {
         private List<Article> articles;
 

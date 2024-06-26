@@ -1,5 +1,6 @@
 package github.maxsplawski.realworld.application.article;
 
+import github.maxsplawski.realworld.application.article.dto.ArticleList;
 import github.maxsplawski.realworld.application.article.dto.CreateArticle;
 import github.maxsplawski.realworld.application.article.dto.UpdateArticle;
 import github.maxsplawski.realworld.application.article.service.ArticleService;
@@ -11,6 +12,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ContextConfiguration;
@@ -48,8 +50,9 @@ class ArticleControllerTest {
         List<Article> articles = Arrays.asList(
                 new Article("Article 1", "article-1", "What's this about", "That's what's up"),
                 new Article("Article 2", "article-2", "What's this about", "That's what's up"));
+        ArticleList articlesList = new ArticleList(articles, 2);
 
-        when(this.articleService.getArticles()).thenReturn(articles);
+        when(this.articleService.getArticles(any(Pageable.class))).thenReturn(articlesList);
 
         mockMvc
                 .perform(get("/api/articles")

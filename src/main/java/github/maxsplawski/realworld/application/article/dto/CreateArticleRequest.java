@@ -1,18 +1,24 @@
 package github.maxsplawski.realworld.application.article.dto;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.constraints.NotBlank;
 
-public class CreateArticle {
+public class CreateArticleRequest {
     @NotBlank(message = "The title is required")
-    private String title;
+    private final String title;
 
     @NotBlank(message = "The description is required")
-    private String description;
+    private final String description;
 
     @NotBlank(message = "The body is required")
-    private String body;
+    private final String body;
 
-    public CreateArticle(String title, String description, String body) {
+    @JsonCreator
+    public CreateArticleRequest(
+            @JsonProperty("title") String title,
+            @JsonProperty("description") String description,
+            @JsonProperty("body") String body) {
         this.title = title;
         this.description = description;
         this.body = body;
@@ -22,23 +28,11 @@ public class CreateArticle {
         return title;
     }
 
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
     public String getDescription() {
         return description;
     }
 
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
     public String getBody() {
         return body;
-    }
-
-    public void setBody(String body) {
-        this.body = body;
     }
 }

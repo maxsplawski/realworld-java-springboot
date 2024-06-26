@@ -1,53 +1,82 @@
 package github.maxsplawski.realworld.application.user.dto;
 
 public class ProfileData {
-    private String username;
+    private final String username;
 
-    private String bio;
+    private final String bio;
 
-    private String image;
+    private final String image;
 
-    private boolean following;
+    private final boolean following;
 
-    public ProfileData() {
-    }
-
-    public ProfileData(String username, String bio, String image, boolean following) {
-        this.username = username;
-        this.bio = bio;
-        this.image = image;
-        this.following = following;
+    public ProfileData(Builder builder) {
+        this.username = builder.username;
+        this.bio = builder.bio;
+        this.image = builder.image;
+        this.following = builder.following;
     }
 
     public String getUsername() {
         return username;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
     public String getBio() {
         return bio;
-    }
-
-    public void setBio(String bio) {
-        this.bio = bio;
     }
 
     public String getImage() {
         return image;
     }
 
-    public void setImage(String image) {
-        this.image = image;
-    }
-
     public boolean isFollowing() {
         return following;
     }
 
-    public void setFollowing(boolean following) {
-        this.following = following;
+    public static Builder builder() {
+        return new Builder();
+    }
+
+    @Override
+    public String toString() {
+        return "ProfileData{" +
+                "username='" + username + '\'' +
+                ", bio='" + bio + '\'' +
+                ", image='" + image + '\'' +
+                ", following=" + following +
+                '}';
+    }
+
+    public static class Builder {
+        private String username;
+
+        private String bio;
+
+        private String image;
+
+        private boolean following;
+
+        public Builder username(String username) {
+            this.username = username;
+            return this;
+        }
+
+        public Builder bio(String bio) {
+            this.bio = bio;
+            return this;
+        }
+
+        public Builder image(String image) {
+            this.image = image;
+            return this;
+        }
+
+        public Builder following(boolean following) {
+            this.following = following;
+            return this;
+        }
+
+        public ProfileData build() {
+            return new ProfileData(this);
+        }
     }
 }

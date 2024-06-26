@@ -59,21 +59,25 @@ public class UserService {
 
     public ProfileData getUserProfile(String username, Optional<Principal> principal) {
         User queriedUser = this.userRepository.findByUsernameOrThrow(username);
-        ProfileData profile = new ProfileData();
-        profile.setFollowing(false);
 
-        principal.ifPresent(p -> {
-                    SecurityUserDetails authenticatedUserDetails = (SecurityUserDetails) p;
-                    User authenticatedUser = authenticatedUserDetails.getUser();
-                    profile.setFollowing(this.isFollowingUser(authenticatedUser, queriedUser));
-                }
-        );
+        if (principal.isPresent()) {
+            SecurityUserDetails authenticatedUserDetails = (SecurityUserDetails) principal.get();
+            User authenticatedUser = authenticatedUserDetails.getUser();
 
-        profile.setUsername(queriedUser.getUsername());
-        profile.setBio(queriedUser.getBio());
-        profile.setImage(queriedUser.getImage());
+            return ProfileData.builder()
+                    .username(queriedUser.getUsername())
+                    .bio(queriedUser.getBio())
+                    .image(queriedUser.getImage())
+                    .following(this.isFollowingUser(authenticatedUser, queriedUser))
+                    .build();
+        }
 
-        return profile;
+        return ProfileData.builder()
+                .username(queriedUser.getUsername())
+                .bio(queriedUser.getBio())
+                .image(queriedUser.getImage())
+                .following(false)
+                .build();
     }
 
     private boolean isFollowingUser(User follower, User followee) {

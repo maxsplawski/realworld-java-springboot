@@ -50,4 +50,15 @@ public class UpdateUserRequest {
     public String getImage() {
         return image;
     }
+
+    @Override
+    public String toString() {
+        return "UpdateUserRequest{" +
+                "username='" + username + '\'' +
+                ", email='" + email + '\'' +
+                ", password='RAW_PASSWORD'" +
+                ", bio='" + bio + '\'' +
+                ", image='" + image + '\'' +
+                '}';
+    }
 }

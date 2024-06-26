@@ -43,6 +43,17 @@ public class AuthenticatedUserData {
         return new Builder();
     }
 
+    @Override
+    public String toString() {
+        return "AuthenticatedUserData{" +
+                "email='" + email + '\'' +
+                ", token='JWT_TOKEN'" +
+                ", username='" + username + '\'' +
+                ", bio='" + bio + '\'' +
+                ", image='" + image + '\'' +
+                '}';
+    }
+
     public static class Builder {
         private String email;
 

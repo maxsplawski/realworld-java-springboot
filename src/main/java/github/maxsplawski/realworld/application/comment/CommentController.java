@@ -1,6 +1,6 @@
 package github.maxsplawski.realworld.application.comment;
 
-import github.maxsplawski.realworld.application.comment.dto.CreateComment;
+import github.maxsplawski.realworld.application.comment.dto.CreateCommentRequest;
 import github.maxsplawski.realworld.application.comment.service.CommentService;
 import github.maxsplawski.realworld.domain.comment.Comment;
 import jakarta.validation.Valid;
@@ -36,9 +36,9 @@ public class CommentController {
     @PostMapping("/{slug}/comments")
     public ResponseEntity<Map<String, Comment>> createCommentForArticle(
             @PathVariable String slug,
-            @Valid @RequestBody CreateComment dto
+            @Valid @RequestBody CreateCommentRequest createCommentRequest
     ) {
-        Comment comment = this.commentService.createCommentForArticle(slug, dto);
+        Comment comment = this.commentService.createCommentForArticle(slug, createCommentRequest);
 
         Map<String, Comment> responseBody = new HashMap<>();
         responseBody.put("comment", comment);

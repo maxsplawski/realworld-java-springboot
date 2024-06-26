@@ -1,6 +1,6 @@
 package github.maxsplawski.realworld.application.comment.service;
 
-import github.maxsplawski.realworld.application.comment.dto.CreateComment;
+import github.maxsplawski.realworld.application.comment.dto.CreateCommentRequest;
 import github.maxsplawski.realworld.domain.article.Article;
 import github.maxsplawski.realworld.domain.article.ArticleRepository;
 import github.maxsplawski.realworld.domain.comment.Comment;
@@ -21,17 +21,15 @@ public class CommentService {
     }
 
     public List<Comment> getArticleComments(String articleSlug) {
-        Article article = this.articleRepository.findBySlug(articleSlug)
-                .orElseThrow(() -> new EntityNotFoundException(articleSlug));
+        Article article = this.articleRepository.findBySlugOrThrow(articleSlug);
 
         return article.getComments();
     }
 
-    public Comment createCommentForArticle(String articleSlug, CreateComment dto) {
-        Article article = this.articleRepository.findBySlug(articleSlug)
-                .orElseThrow(() -> new EntityNotFoundException(articleSlug));
+    public Comment createCommentForArticle(String articleSlug, CreateCommentRequest createCommentRequest) {
+        Article article = this.articleRepository.findBySlugOrThrow(articleSlug);
 
-        Comment comment = new Comment(dto.getBody());
+        Comment comment = new Comment(createCommentRequest.getBody());
 
         article.addComment(comment);
 
@@ -39,8 +37,7 @@ public class CommentService {
     }
 
     public void deleteArticleComment(String articleSlug, Long commentId) {
-        Article article = this.articleRepository.findBySlug(articleSlug)
-                .orElseThrow(() -> new EntityNotFoundException(articleSlug));
+        Article article = this.articleRepository.findBySlugOrThrow(articleSlug);
 
         Comment comment = article.getComments()
                 .stream()

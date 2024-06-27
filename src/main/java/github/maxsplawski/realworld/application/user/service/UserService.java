@@ -3,10 +3,10 @@ package github.maxsplawski.realworld.application.user.service;
 import github.maxsplawski.realworld.application.auth.dto.RegisterRequest;
 import github.maxsplawski.realworld.application.user.dto.ProfileData;
 import github.maxsplawski.realworld.application.user.dto.UpdateUserRequest;
-import github.maxsplawski.realworld.domain.user.SecurityUserDetails;
 import github.maxsplawski.realworld.domain.user.User;
 import github.maxsplawski.realworld.domain.user.UserRepository;
 import jakarta.persistence.EntityNotFoundException;
+import org.springframework.lang.Nullable;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -57,12 +57,11 @@ public class UserService {
                 .orElseThrow(() -> new EntityNotFoundException(username));
     }
 
-    public ProfileData getUserProfile(String username, Optional<Principal> principal) {
+    public ProfileData getUserProfile(String username, @Nullable Principal principal) {
         User queriedUser = this.userRepository.findByUsernameOrThrow(username);
 
-        if (principal.isPresent()) {
-            SecurityUserDetails authenticatedUserDetails = (SecurityUserDetails) principal.get();
-            User authenticatedUser = authenticatedUserDetails.getUser();
+        if (principal != null) {
+            User authenticatedUser = this.userRepository.findByUsernameOrThrow(principal.getName());
 
             return ProfileData.builder()
                     .username(queriedUser.getUsername())
@@ -82,8 +81,7 @@ public class UserService {
 
     public ProfileData followUser(String username, Principal principal) {
         User followee = this.userRepository.findByUsernameOrThrow(username);
-        SecurityUserDetails userDetails = (SecurityUserDetails) principal;
-        User follower = userDetails.getUser();
+        User follower = this.userRepository.findByUsernameOrThrow(principal.getName());
 
         follower.follow(followee);
 
@@ -99,8 +97,7 @@ public class UserService {
 
     public ProfileData unfollowUser(String username, Principal principal) {
         User followee = this.userRepository.findByUsernameOrThrow(username);
-        SecurityUserDetails userDetails = (SecurityUserDetails) principal;
-        User follower = userDetails.getUser();
+        User follower = this.userRepository.findByUsernameOrThrow(principal.getName());
 
         follower.unfollow(followee);
 
@@ -115,6 +112,6 @@ public class UserService {
     }
 
     private boolean isFollowingUser(User follower, User followee) {
-        return false;
+        return followee.getFollowers().contains(follower);
     }
 }

@@ -1,8 +1,124 @@
 package github.maxsplawski.realworld.application.user.controller;
 
+import github.maxsplawski.realworld.application.user.dto.ProfileData;
+import github.maxsplawski.realworld.application.user.dto.UpdateUserRequest;
+import github.maxsplawski.realworld.application.user.service.UserService;
+import github.maxsplawski.realworld.configuration.security.JpaUserDetailsService;
+import github.maxsplawski.realworld.configuration.security.SecurityConfiguration;
+import github.maxsplawski.realworld.domain.user.User;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.web.servlet.MockMvc;
+
+import java.security.Principal;
+
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(UserController.class)
+@ContextConfiguration(classes = {UserController.class, SecurityConfiguration.class})
+@WithMockUser
 class UserControllerTest {
+    @Autowired
+    private MockMvc mockMvc;
 
+    @MockBean
+    private JpaUserDetailsService jpaUserDetailsService;
+
+    @MockBean
+    private UserService userService;
+
+    @Test
+    public void updatesAUser() throws Exception {
+        User updatedUser = new User(
+                "test.user@mail.com",
+                "TestUser",
+                "123",
+                "Hello, there!",
+                "image.com/image",
+                "ROLE_USER"
+        );
+
+        when(this.userService.updateUser(any(String.class), any(UpdateUserRequest.class))).thenReturn(updatedUser);
+
+        this.mockMvc
+                .perform(put("/api/user")
+                        .accept(MediaType.APPLICATION_JSON)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        // language=json
+                        .content("""
+                                    {
+                                        "email": "test.user@mail.com",
+                                        "username": "TestUser",
+                                        "password": "123"
+                                    }
+                                """))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.user").isNotEmpty())
+                .andExpect(jsonPath("$.user.username").value("TestUser"));
+    }
+
+    @Test
+    public void returnsAUserProfile() throws Exception {
+        ProfileData profile = ProfileData.builder()
+                .username("TestUser")
+                .bio("Hello")
+                .image("https://image.com")
+                .following(false)
+                .build();
+
+        when(this.userService.getUserProfile(any(String.class), (any(Principal.class)))).thenReturn(profile);
+
+        this.mockMvc
+                .perform(get("/api/profiles/TestUser"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.profile").isNotEmpty())
+                .andExpect(jsonPath("$.profile.username").value("TestUser"));
+    }
+
+    @Test
+    public void followsAUser() throws Exception {
+        ProfileData profile = ProfileData.builder()
+                .username("TestUser")
+                .bio("Hello")
+                .image("https://image.com")
+                .following(true)
+                .build();
+
+        when(this.userService.followUser(any(String.class), (any(Principal.class)))).thenReturn(profile);
+
+        this.mockMvc
+                .perform(post("/api/profiles/TestUser/follow"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.profile").isNotEmpty())
+                .andExpect(jsonPath("$.profile.username").value("TestUser"))
+                .andExpect(jsonPath("$.profile.following").value(true));
+    }
+
+    @Test
+    public void unfollowsAUser() throws Exception {
+        ProfileData profile = ProfileData.builder()
+                .username("TestUser")
+                .bio("Hello")
+                .image("https://image.com")
+                .following(false)
+                .build();
+
+        when(this.userService.unfollowUser(any(String.class), (any(Principal.class)))).thenReturn(profile);
+
+        this.mockMvc
+                .perform(delete("/api/profiles/TestUser/unfollow"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.profile").isNotEmpty())
+                .andExpect(jsonPath("$.profile.username").value("TestUser"))
+                .andExpect(jsonPath("$.profile.following").value(false));
+    }
 }

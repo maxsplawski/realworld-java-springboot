@@ -1,4 +1,4 @@
-package github.maxsplawski.realworld.configuration;
+package github.maxsplawski.realworld.configuration.security;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 

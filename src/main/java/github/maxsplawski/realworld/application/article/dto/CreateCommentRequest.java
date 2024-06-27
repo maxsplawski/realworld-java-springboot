@@ -1,4 +1,4 @@
-package github.maxsplawski.realworld.application.comment.dto;
+package github.maxsplawski.realworld.application.article.dto;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;

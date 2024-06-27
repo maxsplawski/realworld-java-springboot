@@ -1,11 +1,11 @@
-package github.maxsplawski.realworld.application.comment;
+package github.maxsplawski.realworld.application.article.controller;
 
+import github.maxsplawski.realworld.application.article.dto.CreateCommentRequest;
 import github.maxsplawski.realworld.application.article.service.ArticleService;
-import github.maxsplawski.realworld.application.comment.dto.CreateCommentRequest;
-import github.maxsplawski.realworld.application.comment.service.CommentService;
+import github.maxsplawski.realworld.application.article.service.CommentService;
 import github.maxsplawski.realworld.configuration.security.JpaUserDetailsService;
 import github.maxsplawski.realworld.configuration.security.SecurityConfiguration;
-import github.maxsplawski.realworld.domain.comment.Comment;
+import github.maxsplawski.realworld.domain.article.Comment;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;

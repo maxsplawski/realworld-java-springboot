@@ -1,4 +1,4 @@
-package github.maxsplawski.realworld.domain.tag;
+package github.maxsplawski.realworld.domain.article;
 
 import org.springframework.data.repository.CrudRepository;
 

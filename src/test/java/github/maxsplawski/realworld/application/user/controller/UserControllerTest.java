@@ -1,4 +1,4 @@
-package github.maxsplawski.realworld.application.user;
+package github.maxsplawski.realworld.application.user.controller;
 
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 

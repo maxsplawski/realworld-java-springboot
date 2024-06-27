@@ -1,10 +1,10 @@
-package github.maxsplawski.realworld.application.article;
+package github.maxsplawski.realworld.application.article.controller;
 
 import github.maxsplawski.realworld.application.article.dto.ArticleListData;
 import github.maxsplawski.realworld.application.article.dto.CreateArticleRequest;
 import github.maxsplawski.realworld.application.article.dto.UpdateArticleRequest;
 import github.maxsplawski.realworld.application.article.service.ArticleService;
-import github.maxsplawski.realworld.application.comment.service.CommentService;
+import github.maxsplawski.realworld.application.article.service.CommentService;
 import github.maxsplawski.realworld.configuration.security.JpaUserDetailsService;
 import github.maxsplawski.realworld.configuration.security.SecurityConfiguration;
 import github.maxsplawski.realworld.domain.article.Article;

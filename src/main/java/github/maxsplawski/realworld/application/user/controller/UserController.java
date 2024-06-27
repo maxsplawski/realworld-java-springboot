@@ -1,4 +1,4 @@
-package github.maxsplawski.realworld.application.user;
+package github.maxsplawski.realworld.application.user.controller;
 
 import github.maxsplawski.realworld.application.auth.dto.AuthenticatedUserData;
 import github.maxsplawski.realworld.application.user.dto.ProfileData;
@@ -16,7 +16,7 @@ import java.util.Map;
 import java.util.Optional;
 
 @RestController
-public class UserController {
+class UserController {
     private final UserService userService;
 
     public UserController(UserService userService) {

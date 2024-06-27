@@ -1,10 +1,10 @@
-package github.maxsplawski.realworld.application.comment.service;
+package github.maxsplawski.realworld.application.article.service;
 
-import github.maxsplawski.realworld.application.comment.dto.CreateCommentRequest;
+import github.maxsplawski.realworld.application.article.dto.CreateCommentRequest;
 import github.maxsplawski.realworld.domain.article.Article;
 import github.maxsplawski.realworld.domain.article.ArticleRepository;
-import github.maxsplawski.realworld.domain.comment.Comment;
-import github.maxsplawski.realworld.domain.comment.CommentRepository;
+import github.maxsplawski.realworld.domain.article.Comment;
+import github.maxsplawski.realworld.domain.article.CommentRepository;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.stereotype.Service;
 

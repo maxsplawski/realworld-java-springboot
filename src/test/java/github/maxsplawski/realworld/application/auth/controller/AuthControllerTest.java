@@ -1,4 +1,4 @@
-package github.maxsplawski.realworld.application.auth;
+package github.maxsplawski.realworld.application.auth.controller;
 
 import github.maxsplawski.realworld.application.auth.dto.LoginRequest;
 import github.maxsplawski.realworld.application.auth.service.AuthService;

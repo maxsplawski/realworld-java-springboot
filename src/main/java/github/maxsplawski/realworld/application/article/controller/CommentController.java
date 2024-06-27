@@ -1,8 +1,8 @@
-package github.maxsplawski.realworld.application.comment;
+package github.maxsplawski.realworld.application.article.controller;
 
-import github.maxsplawski.realworld.application.comment.dto.CreateCommentRequest;
-import github.maxsplawski.realworld.application.comment.service.CommentService;
-import github.maxsplawski.realworld.domain.comment.Comment;
+import github.maxsplawski.realworld.application.article.dto.CreateCommentRequest;
+import github.maxsplawski.realworld.application.article.service.CommentService;
+import github.maxsplawski.realworld.domain.article.Comment;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,7 +14,7 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/api/articles")
-public class CommentController {
+class CommentController {
     private final CommentService commentService;
 
     public CommentController(CommentService commentService) {

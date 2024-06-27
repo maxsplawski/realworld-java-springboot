@@ -57,5 +57,29 @@ public class UserController {
         return ResponseEntity.ok().body(responseBody);
     }
 
+    @PostMapping("/api/profiles/{username}/follow")
+    private ResponseEntity<Map<String, ProfileData>> followUser(
+            Principal principal,
+            @PathVariable String username
+    ) {
+        ProfileData profile = this.userService.followUser(username, principal);
 
+        Map<String, ProfileData> responseBody = new HashMap<>();
+        responseBody.put("profile", profile);
+
+        return ResponseEntity.ok().body(responseBody);
+    }
+
+    @DeleteMapping("/api/profiles/{username}/follow")
+    private ResponseEntity<Map<String, ProfileData>> unfollowUser(
+            Principal principal,
+            @PathVariable String username
+    ) {
+        ProfileData profile = this.userService.unfollowUser(username, principal);
+
+        Map<String, ProfileData> responseBody = new HashMap<>();
+        responseBody.put("profile", profile);
+
+        return ResponseEntity.ok().body(responseBody);
+    }
 }

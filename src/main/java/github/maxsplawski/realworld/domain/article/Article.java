@@ -1,7 +1,6 @@
 package github.maxsplawski.realworld.domain.article;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
-import github.maxsplawski.realworld.domain.comment.Comment;
 import jakarta.persistence.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
@@ -27,10 +26,8 @@ public class Article {
     @Column(unique = true)
     private String slug;
 
-    @Column
     private String description;
 
-    @Column(length = 3000)
     private String body;
 
     @CreationTimestamp

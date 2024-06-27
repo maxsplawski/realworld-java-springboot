@@ -1,4 +1,4 @@
-package github.maxsplawski.realworld.domain.comment;
+package github.maxsplawski.realworld.domain.article;
 
 import org.springframework.data.repository.CrudRepository;
 

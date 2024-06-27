@@ -1,4 +1,4 @@
-package github.maxsplawski.realworld.domain.tag;
+package github.maxsplawski.realworld.domain.article;
 
 import jakarta.persistence.*;
 import org.hibernate.annotations.CreationTimestamp;

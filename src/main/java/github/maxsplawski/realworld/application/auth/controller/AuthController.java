@@ -1,9 +1,9 @@
-package github.maxsplawski.realworld.application.auth;
+package github.maxsplawski.realworld.application.auth.controller;
 
 import github.maxsplawski.realworld.application.auth.dto.AuthenticatedUserData;
 import github.maxsplawski.realworld.application.auth.dto.LoginRequest;
+import github.maxsplawski.realworld.application.auth.dto.RegisterRequest;
 import github.maxsplawski.realworld.application.auth.service.AuthService;
-import github.maxsplawski.realworld.application.user.dto.CreateUserRequest;
 import github.maxsplawski.realworld.application.user.service.UserService;
 import github.maxsplawski.realworld.domain.user.SecurityUserDetails;
 import github.maxsplawski.realworld.domain.user.User;
@@ -20,7 +20,7 @@ import java.security.Principal;
 import java.util.Map;
 
 @RestController
-public class AuthController {
+class AuthController {
     private final AuthService authService;
     private final UserService userService;
 
@@ -48,7 +48,7 @@ public class AuthController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<Map<String, AuthenticatedUserData>> register(@Valid @RequestBody CreateUserRequest registerRequest) {
+    public ResponseEntity<Map<String, AuthenticatedUserData>> register(@Valid @RequestBody RegisterRequest registerRequest) {
         this.userService.createUser(registerRequest);
         SecurityUserDetails userDetails = this.authService.login(new LoginRequest(registerRequest.getUsername(), registerRequest.getPassword()));
         User user = userDetails.getUser();

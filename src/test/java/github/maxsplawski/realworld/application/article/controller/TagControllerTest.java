@@ -1,9 +1,9 @@
-package github.maxsplawski.realworld.application.tag;
+package github.maxsplawski.realworld.application.article.controller;
 
 import github.maxsplawski.realworld.configuration.security.JpaUserDetailsService;
 import github.maxsplawski.realworld.configuration.security.SecurityConfiguration;
-import github.maxsplawski.realworld.domain.tag.Tag;
-import github.maxsplawski.realworld.domain.tag.TagRepository;
+import github.maxsplawski.realworld.domain.article.Tag;
+import github.maxsplawski.realworld.domain.article.TagRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;

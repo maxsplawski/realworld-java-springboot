@@ -1,7 +1,6 @@
-package github.maxsplawski.realworld.domain.comment;
+package github.maxsplawski.realworld.domain.article;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import github.maxsplawski.realworld.domain.article.Article;
 import jakarta.persistence.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
@@ -19,7 +18,6 @@ public class Comment {
     @JsonBackReference
     private Article article;
 
-    @Column
     private String body;
 
     @CreationTimestamp

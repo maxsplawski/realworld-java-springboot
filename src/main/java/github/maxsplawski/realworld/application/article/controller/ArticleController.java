@@ -1,4 +1,4 @@
-package github.maxsplawski.realworld.application.article;
+package github.maxsplawski.realworld.application.article.controller;
 
 import github.maxsplawski.realworld.application.article.dto.ArticleListData;
 import github.maxsplawski.realworld.application.article.dto.CreateArticleRequest;
@@ -16,7 +16,7 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/api/articles")
-public class ArticleController {
+class ArticleController {
     private final ArticleService articleService;
 
     public ArticleController(ArticleService articleService) {

@@ -1,6 +1,6 @@
 package github.maxsplawski.realworld.application.user.service;
 
-import github.maxsplawski.realworld.application.user.dto.CreateUserRequest;
+import github.maxsplawski.realworld.application.auth.dto.RegisterRequest;
 import github.maxsplawski.realworld.application.user.dto.ProfileData;
 import github.maxsplawski.realworld.application.user.dto.UpdateUserRequest;
 import github.maxsplawski.realworld.domain.user.SecurityUserDetails;
@@ -25,7 +25,7 @@ public class UserService {
         return this.userRepository.findByUsernameOrThrow(username);
     }
 
-    public User createUser(CreateUserRequest createUserRequest) {
+    public User createUser(RegisterRequest createUserRequest) {
         User user = new User();
 
         String encodedPassword = new BCryptPasswordEncoder().encode(createUserRequest.getPassword());

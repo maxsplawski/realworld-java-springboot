@@ -1,7 +1,7 @@
-package github.maxsplawski.realworld.application.tag;
+package github.maxsplawski.realworld.application.article.controller;
 
-import github.maxsplawski.realworld.domain.tag.Tag;
-import github.maxsplawski.realworld.domain.tag.TagRepository;
+import github.maxsplawski.realworld.domain.article.Tag;
+import github.maxsplawski.realworld.domain.article.TagRepository;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -14,7 +14,7 @@ import java.util.stream.StreamSupport;
 
 @RestController
 @RequestMapping("/api/tags")
-public class TagController {
+class TagController {
     private final TagRepository tagRepository;
 
     public TagController(TagRepository tagRepository) {

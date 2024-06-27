@@ -1,11 +1,11 @@
-package github.maxsplawski.realworld.application.user.dto;
+package github.maxsplawski.realworld.application.auth.dto;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 
-public class CreateUserRequest {
+public class RegisterRequest {
     @NotBlank
     private final String username;
 
@@ -21,7 +21,7 @@ public class CreateUserRequest {
     private final String image;
 
     @JsonCreator
-    public CreateUserRequest(
+    public RegisterRequest(
             @JsonProperty("username") String username,
             @JsonProperty("email") String email,
             @JsonProperty("password") String password,

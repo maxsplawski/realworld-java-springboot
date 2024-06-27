@@ -13,7 +13,6 @@ import org.springframework.web.context.request.WebRequest;
 import java.security.Principal;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Optional;
 
 @RestController
 class UserController {
@@ -49,7 +48,7 @@ class UserController {
             Principal principal,
             @PathVariable String username
     ) {
-        ProfileData profile = this.userService.getUserProfile(username, Optional.ofNullable(principal));
+        ProfileData profile = this.userService.getUserProfile(username, principal);
 
         Map<String, ProfileData> responseBody = new HashMap<>();
         responseBody.put("profile", profile);
@@ -70,7 +69,7 @@ class UserController {
         return ResponseEntity.ok().body(responseBody);
     }
 
-    @DeleteMapping("/api/profiles/{username}/follow")
+    @DeleteMapping("/api/profiles/{username}/unfollow")
     private ResponseEntity<Map<String, ProfileData>> unfollowUser(
             Principal principal,
             @PathVariable String username

@@ -60,10 +60,11 @@ class ArticleControllerTest {
                 .perform(get("/api/articles")
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.article").isArray())
-                .andExpect(jsonPath("$.article", hasSize(2)))
-                .andExpect(jsonPath("$.article[0].title").value("Article 1"))
-                .andExpect(jsonPath("$.article[1].title").value("Article 2"));
+                .andExpect(jsonPath("$.articles").isArray())
+                .andExpect(jsonPath("$.articles", hasSize(2)))
+                .andExpect(jsonPath("$.articles[0].title").value("Article 1"))
+                .andExpect(jsonPath("$.articles[1].title").value("Article 2"))
+                .andExpect(jsonPath("$.articlesCount").value(2));
     }
 
     @Test
@@ -112,7 +113,7 @@ class ArticleControllerTest {
         when(this.articleService.updateArticle(any(String.class), any(UpdateArticleRequest.class))).thenReturn(updatedArticle);
 
         mockMvc
-                .perform(patch("/api/articles/article")
+                .perform(put("/api/articles/article")
                         .accept(MediaType.APPLICATION_JSON)
                         .contentType(MediaType.APPLICATION_JSON)
                         //language=json

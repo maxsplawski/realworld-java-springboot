@@ -1,5 +1,6 @@
 package github.maxsplawski.realworld.application.auth.controller;
 
+import github.maxsplawski.realworld.application.auth.dto.AuthenticatedUserData;
 import github.maxsplawski.realworld.application.auth.dto.LoginRequest;
 import github.maxsplawski.realworld.application.auth.service.AuthService;
 import github.maxsplawski.realworld.application.user.service.UserService;
@@ -17,6 +18,8 @@ import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 
+import java.util.Map;
+
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -27,7 +30,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @WebMvcTest(AuthController.class)
 @ContextConfiguration(classes = {AuthController.class, SecurityConfiguration.class})
 class AuthControllerTest {
-
     @Autowired
     private MockMvc mockMvc;
 
@@ -58,8 +60,18 @@ class AuthControllerTest {
                 "image.com/image",
                 "ROLE_USER"
         );
+        Map<String, AuthenticatedUserData> authenticatedUserData = Map.of(
+                "user", AuthenticatedUserData.builder()
+                        .email(user.getEmail())
+                        .token("abcd")
+                        .username(user.getUsername())
+                        .bio(user.getBio())
+                        .image(user.getImage())
+                        .build()
+        );
 
         when(this.userService.getUser(any(String.class))).thenReturn(user);
+        when(this.authService.wrapAuthenticatedUserData(any(AuthenticatedUserData.class))).thenReturn(authenticatedUserData);
 
         this.mockMvc
                 .perform(get("/api/user"))
@@ -79,8 +91,18 @@ class AuthControllerTest {
                 "ROLE_USER"
         );
         SecurityUserDetails userDetails = new SecurityUserDetails(user);
+        Map<String, AuthenticatedUserData> authenticatedUserData = Map.of(
+                "user", AuthenticatedUserData.builder()
+                        .email(user.getEmail())
+                        .token("abcd")
+                        .username(user.getUsername())
+                        .bio(user.getBio())
+                        .image(user.getImage())
+                        .build()
+        );
 
         when(this.authService.login(any(LoginRequest.class))).thenReturn(userDetails);
+        when(this.authService.wrapAuthenticatedUserData(any(AuthenticatedUserData.class))).thenReturn(authenticatedUserData);
 
         this.mockMvc
                 .perform(post("/login")

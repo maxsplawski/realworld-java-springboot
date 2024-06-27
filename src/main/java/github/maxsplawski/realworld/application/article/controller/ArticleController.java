@@ -56,7 +56,7 @@ class ArticleController {
                 .body(responseBody);
     }
 
-    @PatchMapping("/{slug}")
+    @PutMapping("/{slug}")
     public ResponseEntity<Map<String, Article>> updateArticle(
             @PathVariable String slug,
             @Valid @RequestBody UpdateArticleRequest updateArticleRequest

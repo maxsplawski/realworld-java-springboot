@@ -80,6 +80,40 @@ public class UserService {
                 .build();
     }
 
+    public ProfileData followUser(String username, Principal principal) {
+        User followee = this.userRepository.findByUsernameOrThrow(username);
+        SecurityUserDetails userDetails = (SecurityUserDetails) principal;
+        User follower = userDetails.getUser();
+
+        follower.follow(followee);
+
+        this.userRepository.save(follower);
+
+        return ProfileData.builder()
+                .username(followee.getUsername())
+                .bio(followee.getBio())
+                .image(followee.getImage())
+                .following(this.isFollowingUser(follower, followee))
+                .build();
+    }
+
+    public ProfileData unfollowUser(String username, Principal principal) {
+        User followee = this.userRepository.findByUsernameOrThrow(username);
+        SecurityUserDetails userDetails = (SecurityUserDetails) principal;
+        User follower = userDetails.getUser();
+
+        follower.unfollow(followee);
+
+        this.userRepository.save(follower);
+
+        return ProfileData.builder()
+                .username(followee.getUsername())
+                .bio(followee.getBio())
+                .image(followee.getImage())
+                .following(this.isFollowingUser(follower, followee))
+                .build();
+    }
+
     private boolean isFollowingUser(User follower, User followee) {
         return false;
     }

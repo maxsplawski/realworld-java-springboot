@@ -7,7 +7,7 @@ import java.util.List;
 public class ArticleListData {
     private final List<Article> articles;
 
-    private final int articlesCount;
+    private final long articlesCount;
 
     public ArticleListData(Builder builder) {
         this.articles = builder.articles;
@@ -18,7 +18,7 @@ public class ArticleListData {
         return articles;
     }
 
-    public int getArticlesCount() {
+    public long getArticlesCount() {
         return articlesCount;
     }
 
@@ -37,7 +37,7 @@ public class ArticleListData {
     public static class Builder {
         private List<Article> articles;
 
-        private int articlesCount;
+        private long articlesCount;
 
         public Builder() {
         }
@@ -47,7 +47,7 @@ public class ArticleListData {
             return this;
         }
 
-        public Builder articlesCount(int count) {
+        public Builder articlesCount(long count) {
             this.articlesCount = count;
             return this;
         }

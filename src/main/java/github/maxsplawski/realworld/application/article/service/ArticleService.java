@@ -40,7 +40,7 @@ public class ArticleService {
 
         return ArticleListData.builder()
                 .articles(page.toList())
-                .articlesCount(page.getTotalPages())
+                .articlesCount(page.getTotalElements())
                 .build();
     }
 

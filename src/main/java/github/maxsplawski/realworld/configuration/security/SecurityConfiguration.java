@@ -46,6 +46,7 @@ public class SecurityConfiguration {
                         .requestMatchers("/login").permitAll()
                         .requestMatchers("/register").permitAll()
                         .requestMatchers("/api/profiles/{username}").permitAll()
+                        .requestMatchers("/api/articles").permitAll()
                         .anyRequest().authenticated()
                 )
                 .oauth2ResourceServer(oauth2 -> oauth2

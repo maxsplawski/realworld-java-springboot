@@ -2,12 +2,14 @@ package github.maxsplawski.realworld.domain.user;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import github.maxsplawski.realworld.domain.article.Article;
 import jakarta.persistence.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.Instant;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -29,6 +31,9 @@ public class User {
     @ManyToMany(fetch = FetchType.LAZY, mappedBy = "followedUsers")
     @JsonBackReference
     private Set<User> followers = new HashSet<>();
+
+    @OneToMany(mappedBy = "author")
+    private List<Article> articles;
 
     @Column(unique = true)
     private String email;
@@ -95,6 +100,24 @@ public class User {
     public void unfollow(User user) {
         this.followedUsers.remove(user);
         user.getFollowers().remove(this);
+    }
+
+    public List<Article> getArticles() {
+        return articles;
+    }
+
+    public void setArticles(List<Article> articles) {
+        this.articles = articles;
+    }
+
+    public void addArticle(Article article) {
+        this.articles.add(article);
+        article.setAuthor(this);
+    }
+
+    public void removeArticle(Article article) {
+        this.articles.remove(article);
+        article.setAuthor(null);
     }
 
     public String getEmail() {

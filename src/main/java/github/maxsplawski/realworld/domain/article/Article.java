@@ -1,6 +1,7 @@
 package github.maxsplawski.realworld.domain.article;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import github.maxsplawski.realworld.domain.user.User;
 import jakarta.persistence.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
@@ -19,6 +20,10 @@ public class Article {
     @OneToMany(mappedBy = "article")
     @JsonManagedReference
     private List<Comment> comments = new ArrayList<>();
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    private User author;
 
     @Column(unique = true)
     private String title;
@@ -53,6 +58,32 @@ public class Article {
 
     public void setId(Long id) {
         Id = id;
+    }
+
+    public List<Comment> getComments() {
+        return comments;
+    }
+
+    public void setComments(List<Comment> comments) {
+        this.comments = comments;
+    }
+
+    public void addComment(Comment comment) {
+        comments.add(comment);
+        comment.setArticle(this);
+    }
+
+    public void removeComment(Comment comment) {
+        comments.remove(comment);
+        comment.setArticle(null);
+    }
+
+    public User getAuthor() {
+        return author;
+    }
+
+    public void setAuthor(User author) {
+        this.author = author;
     }
 
     public String getTitle() {
@@ -93,23 +124,5 @@ public class Article {
 
     public Instant getUpdatedAt() {
         return updatedAt;
-    }
-
-    public List<Comment> getComments() {
-        return comments;
-    }
-
-    public void setComments(List<Comment> comments) {
-        this.comments = comments;
-    }
-
-    public void addComment(Comment comment) {
-        comments.add(comment);
-        comment.setArticle(this);
-    }
-
-    public void removeComment(Comment comment) {
-        comments.remove(comment);
-        comment.setArticle(null);
     }
 }

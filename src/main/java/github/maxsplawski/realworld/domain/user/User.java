@@ -19,12 +19,13 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToMany(fetch = FetchType.LAZY)
+    @ManyToMany
     @JoinTable(
             name = "followers",
             joinColumns = @JoinColumn(name = "follower_id"),
             inverseJoinColumns = @JoinColumn(name = "followee_id")
     )
+
     @JsonManagedReference
     private Set<User> followedUsers = new HashSet<>();
 
@@ -33,6 +34,7 @@ public class User {
     private Set<User> followers = new HashSet<>();
 
     @OneToMany(mappedBy = "author")
+    @JsonManagedReference
     private List<Article> articles;
 
     @Column(unique = true)

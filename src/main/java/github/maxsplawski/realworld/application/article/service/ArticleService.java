@@ -1,20 +1,27 @@
 package github.maxsplawski.realworld.application.article.service;
 
+import github.maxsplawski.realworld.application.article.dto.ArticleData;
 import github.maxsplawski.realworld.application.article.dto.ArticleListData;
 import github.maxsplawski.realworld.application.article.dto.CreateArticleRequest;
 import github.maxsplawski.realworld.application.article.dto.UpdateArticleRequest;
+import github.maxsplawski.realworld.application.user.dto.ProfileData;
+import github.maxsplawski.realworld.application.user.service.JpaUserDetailsService;
+import github.maxsplawski.realworld.application.user.service.UserService;
 import github.maxsplawski.realworld.domain.article.Article;
 import github.maxsplawski.realworld.domain.article.ArticleRepository;
 import github.maxsplawski.realworld.domain.article.Comment;
 import github.maxsplawski.realworld.domain.article.CommentRepository;
+import github.maxsplawski.realworld.domain.user.User;
 import github.maxsplawski.realworld.util.string.Slugger;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Service;
 
+import java.security.Principal;
 import java.util.List;
 import java.util.Optional;
 
@@ -22,13 +29,20 @@ import java.util.Optional;
 public class ArticleService {
     private final ArticleRepository articleRepository;
     private final CommentRepository commentRepository;
+    private final JpaUserDetailsService userDetailsService;
+    private final UserService userService;
 
-    public ArticleService(ArticleRepository articleRepository, CommentRepository commentRepository) {
+    public ArticleService(ArticleRepository articleRepository, CommentRepository commentRepository, JpaUserDetailsService userDetailsService, UserService userService) {
         this.articleRepository = articleRepository;
         this.commentRepository = commentRepository;
+        this.userDetailsService = userDetailsService;
+        this.userService = userService;
     }
 
-    public ArticleListData getArticles(Pageable pageable) {
+    public ArticleListData getArticles(
+            @Nullable Principal principal,
+            Pageable pageable
+    ) {
         Page<Article> page = this.articleRepository
                 .findAll(
                         PageRequest.of(
@@ -38,8 +52,37 @@ public class ArticleService {
                         )
                 );
 
+        List<ArticleData> articles = page.getContent().stream()
+                .map(source -> {
+                    Optional<User> authenticatedUser = this.userDetailsService.loadUserFromPrincipal(principal);
+                    User author = source.getAuthor();
+                    boolean isFollowingUser = false;
+
+                    if (authenticatedUser.isPresent()) {
+                        isFollowingUser = this.userService.isFollowingUser(authenticatedUser.get(), author);
+                    }
+
+                    ProfileData profile = ProfileData.builder()
+                            .username(author.getUsername())
+                            .bio(author.getBio())
+                            .image(author.getImage())
+                            .following(isFollowingUser)
+                            .build();
+
+                    return ArticleData.builder()
+                            .title(source.getTitle())
+                            .slug(source.getSlug())
+                            .description(source.getDescription())
+                            .body(source.getBody())
+                            .createdAt(source.getCreatedAt())
+                            .updatedAt(source.getUpdatedAt())
+                            .author(profile)
+                            .build();
+                })
+                .toList();
+
         return ArticleListData.builder()
-                .articles(page.getContent())
+                .articles(articles)
                 .articlesCount(page.getTotalElements())
                 .build();
     }

@@ -1,11 +1,13 @@
 package github.maxsplawski.realworld.application.article.controller;
 
+import github.maxsplawski.realworld.application.article.dto.ArticleData;
 import github.maxsplawski.realworld.application.article.dto.ArticleListData;
 import github.maxsplawski.realworld.application.article.dto.CreateArticleRequest;
 import github.maxsplawski.realworld.application.article.dto.UpdateArticleRequest;
 import github.maxsplawski.realworld.application.article.service.ArticleService;
 import github.maxsplawski.realworld.application.article.service.CommentService;
-import github.maxsplawski.realworld.configuration.security.JpaUserDetailsService;
+import github.maxsplawski.realworld.application.user.dto.ProfileData;
+import github.maxsplawski.realworld.application.user.service.JpaUserDetailsService;
 import github.maxsplawski.realworld.configuration.security.SecurityConfiguration;
 import github.maxsplawski.realworld.domain.article.Article;
 import org.junit.jupiter.api.Test;
@@ -18,6 +20,8 @@ import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 
+import java.security.Principal;
+import java.time.Instant;
 import java.util.Arrays;
 import java.util.List;
 
@@ -46,15 +50,32 @@ class ArticleControllerTest {
 
     @Test
     public void returnsListOfArticles() throws Exception {
-        List<Article> articles = Arrays.asList(
-                new Article("Article 1", "article-1", "What's this about", "That's what's up"),
-                new Article("Article 2", "article-2", "What's this about", "That's what's up"));
+        List<ArticleData> articles = Arrays.asList(
+                ArticleData.builder()
+                        .title("Article 1")
+                        .slug("article-1")
+                        .description("What's this about")
+                        .body("That's what's up")
+                        .createdAt(Instant.now())
+                        .updatedAt(Instant.now())
+                        .author(ProfileData.builder().build())
+                        .build(),
+                ArticleData.builder()
+                        .title("Article 2")
+                        .slug("article-2")
+                        .description("What's this about")
+                        .body("That's what's up")
+                        .createdAt(Instant.now())
+                        .updatedAt(Instant.now())
+                        .author(ProfileData.builder().build())
+                        .build()
+        );
         ArticleListData articlesList = ArticleListData.builder()
                 .articles(articles)
                 .articlesCount(2)
                 .build();
 
-        when(this.articleService.getArticles(any(Pageable.class))).thenReturn(articlesList);
+        when(this.articleService.getArticles(any(Principal.class), any(Pageable.class))).thenReturn(articlesList);
 
         mockMvc
                 .perform(get("/api/articles")

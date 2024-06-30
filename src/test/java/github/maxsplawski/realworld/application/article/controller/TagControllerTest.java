@@ -1,6 +1,6 @@
 package github.maxsplawski.realworld.application.article.controller;
 
-import github.maxsplawski.realworld.configuration.security.JpaUserDetailsService;
+import github.maxsplawski.realworld.application.user.service.JpaUserDetailsService;
 import github.maxsplawski.realworld.configuration.security.SecurityConfiguration;
 import github.maxsplawski.realworld.domain.article.Tag;
 import github.maxsplawski.realworld.domain.article.TagRepository;

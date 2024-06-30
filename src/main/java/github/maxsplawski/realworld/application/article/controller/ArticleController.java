@@ -11,6 +11,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.security.Principal;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -24,8 +25,11 @@ class ArticleController {
     }
 
     @GetMapping("")
-    public ResponseEntity<ArticleListData> getArticles(Pageable pageable) {
-        ArticleListData articles = this.articleService.getArticles(pageable);
+    public ResponseEntity<ArticleListData> getArticles(
+            Principal principal,
+            Pageable pageable
+    ) {
+        ArticleListData articles = this.articleService.getArticles(principal, pageable);
 
         return ResponseEntity
                 .status(HttpStatus.OK)

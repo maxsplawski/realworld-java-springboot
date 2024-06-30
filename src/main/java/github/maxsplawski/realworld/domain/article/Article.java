@@ -1,5 +1,6 @@
 package github.maxsplawski.realworld.domain.article;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import github.maxsplawski.realworld.domain.user.User;
 import jakarta.persistence.*;
@@ -21,8 +22,9 @@ public class Article {
     @JsonManagedReference
     private List<Comment> comments = new ArrayList<>();
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "user_id")
+    @JsonBackReference
     private User author;
 
     @Column(unique = true)

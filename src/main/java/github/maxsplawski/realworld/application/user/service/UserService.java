@@ -111,7 +111,7 @@ public class UserService {
                 .build();
     }
 
-    private boolean isFollowingUser(User follower, User followee) {
+    public boolean isFollowingUser(User follower, User followee) {
         return followee.getFollowers().contains(follower);
     }
 }

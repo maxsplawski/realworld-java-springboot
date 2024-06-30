@@ -3,7 +3,7 @@ package github.maxsplawski.realworld.application.article.controller;
 import github.maxsplawski.realworld.application.article.dto.CreateCommentRequest;
 import github.maxsplawski.realworld.application.article.service.ArticleService;
 import github.maxsplawski.realworld.application.article.service.CommentService;
-import github.maxsplawski.realworld.configuration.security.JpaUserDetailsService;
+import github.maxsplawski.realworld.application.user.service.JpaUserDetailsService;
 import github.maxsplawski.realworld.configuration.security.SecurityConfiguration;
 import github.maxsplawski.realworld.domain.article.Comment;
 import org.junit.jupiter.api.Test;

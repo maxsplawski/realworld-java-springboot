@@ -1,11 +1,9 @@
 package github.maxsplawski.realworld.application.article.dto;
 
-import github.maxsplawski.realworld.domain.article.Article;
-
 import java.util.List;
 
 public class ArticleListData {
-    private final List<Article> articles;
+    private final List<ArticleData> articles;
 
     private final long articlesCount;
 
@@ -14,7 +12,7 @@ public class ArticleListData {
         this.articlesCount = builder.articlesCount;
     }
 
-    public List<Article> getArticles() {
+    public List<ArticleData> getArticles() {
         return articles;
     }
 
@@ -35,14 +33,14 @@ public class ArticleListData {
     }
 
     public static class Builder {
-        private List<Article> articles;
+        private List<ArticleData> articles;
 
         private long articlesCount;
 
         public Builder() {
         }
 
-        public Builder articles(List<Article> articles) {
+        public Builder articles(List<ArticleData> articles) {
             this.articles = articles;
             return this;
         }

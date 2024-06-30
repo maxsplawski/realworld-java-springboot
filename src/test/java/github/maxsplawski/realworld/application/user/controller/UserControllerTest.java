@@ -2,8 +2,8 @@ package github.maxsplawski.realworld.application.user.controller;
 
 import github.maxsplawski.realworld.application.user.dto.ProfileData;
 import github.maxsplawski.realworld.application.user.dto.UpdateUserRequest;
+import github.maxsplawski.realworld.application.user.service.JpaUserDetailsService;
 import github.maxsplawski.realworld.application.user.service.UserService;
-import github.maxsplawski.realworld.configuration.security.JpaUserDetailsService;
 import github.maxsplawski.realworld.configuration.security.SecurityConfiguration;
 import github.maxsplawski.realworld.domain.user.User;
 import org.junit.jupiter.api.Test;

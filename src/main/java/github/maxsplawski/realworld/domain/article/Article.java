@@ -9,7 +9,9 @@ import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.Instant;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(name = "articles")
@@ -26,6 +28,10 @@ public class Article {
     @JoinColumn(name = "user_id")
     @JsonBackReference
     private User author;
+
+    @ManyToMany(mappedBy = "favouriteArticles")
+    @JsonBackReference
+    private Set<User> usersWhoFavourited = new HashSet<>();
 
     @Column(unique = true)
     private String title;
@@ -86,6 +92,14 @@ public class Article {
 
     public void setAuthor(User author) {
         this.author = author;
+    }
+
+    public Set<User> getUsersWhoFavourited() {
+        return usersWhoFavourited;
+    }
+
+    public void setUsersWhoFavourited(Set<User> usersWhoFavourited) {
+        this.usersWhoFavourited = usersWhoFavourited;
     }
 
     public String getTitle() {

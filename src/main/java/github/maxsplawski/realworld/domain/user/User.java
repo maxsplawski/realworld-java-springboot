@@ -25,13 +25,21 @@ public class User {
             joinColumns = @JoinColumn(name = "follower_id"),
             inverseJoinColumns = @JoinColumn(name = "followee_id")
     )
-
     @JsonManagedReference
     private Set<User> followedUsers = new HashSet<>();
 
-    @ManyToMany(fetch = FetchType.LAZY, mappedBy = "followedUsers")
+    @ManyToMany(mappedBy = "followedUsers")
     @JsonBackReference
     private Set<User> followers = new HashSet<>();
+
+    @ManyToMany
+    @JoinTable(
+            name = "favorite_articles",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "article_id")
+    )
+    @JsonManagedReference
+    private Set<Article> favouriteArticles = new HashSet<>();
 
     @OneToMany(mappedBy = "author")
     @JsonManagedReference
@@ -102,6 +110,24 @@ public class User {
     public void unfollow(User user) {
         this.followedUsers.remove(user);
         user.getFollowers().remove(this);
+    }
+
+    public Set<Article> getFavouriteArticles() {
+        return favouriteArticles;
+    }
+
+    public void setFavouriteArticles(Set<Article> favoriteArticles) {
+        this.favouriteArticles = favoriteArticles;
+    }
+
+    public void favoriteArticle(Article article) {
+        this.favouriteArticles.add(article);
+        article.getUsersWhoFavourited().add(this);
+    }
+
+    public void unfavouriteArticle(Article article) {
+        this.favouriteArticles.remove(article);
+        article.getUsersWhoFavourited().remove(this);
     }
 
     public List<Article> getArticles() {

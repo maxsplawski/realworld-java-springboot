@@ -5,7 +5,7 @@ import github.maxsplawski.realworld.application.article.dto.ArticleListData;
 import github.maxsplawski.realworld.application.article.dto.CreateArticleRequest;
 import github.maxsplawski.realworld.application.article.dto.UpdateArticleRequest;
 import github.maxsplawski.realworld.application.article.service.ArticleService;
-import github.maxsplawski.realworld.application.article.service.CommentService;
+import github.maxsplawski.realworld.application.exception.GlobalExceptionHandler;
 import github.maxsplawski.realworld.application.user.dto.ProfileData;
 import github.maxsplawski.realworld.application.user.service.JpaUserDetailsService;
 import github.maxsplawski.realworld.configuration.security.SecurityConfiguration;
@@ -23,6 +23,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import java.security.Principal;
 import java.time.Instant;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import static org.hamcrest.Matchers.hasSize;
@@ -32,7 +33,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(ArticleController.class)
-@ContextConfiguration(classes = {ArticleController.class, SecurityConfiguration.class})
+@ContextConfiguration(classes = {ArticleController.class, SecurityConfiguration.class, GlobalExceptionHandler.class})
 @WithMockUser
 class ArticleControllerTest {
 
@@ -45,11 +46,8 @@ class ArticleControllerTest {
     @MockBean
     private ArticleService articleService;
 
-    @MockBean
-    private CommentService commentService;
-
     @Test
-    public void returnsListOfArticles() throws Exception {
+    public void whenRequest_thenReturnsListOfArticles() throws Exception {
         List<ArticleData> articles = Arrays.asList(
                 ArticleData.builder()
                         .title("Article 1")
@@ -89,7 +87,37 @@ class ArticleControllerTest {
     }
 
     @Test
-    public void returnsArticleBySlug() throws Exception {
+    public void whenRequestWithPageable_thenReturnsPaginatedListOfArticles() throws Exception {
+        List<ArticleData> articles = Collections.singletonList(
+                ArticleData.builder()
+                        .title("Article 2")
+                        .slug("article-2")
+                        .description("What's this about")
+                        .body("That's what's up")
+                        .createdAt(Instant.now())
+                        .updatedAt(Instant.now())
+                        .author(ProfileData.builder().build())
+                        .build()
+        );
+        ArticleListData articlesList = ArticleListData.builder()
+                .articles(articles)
+                .articlesCount(2)
+                .build();
+
+        when(this.articleService.getArticles(any(Principal.class), any(Pageable.class))).thenReturn(articlesList);
+
+        mockMvc
+                .perform(get("/api/articles?limit=1&offset=1")
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.articles").isArray())
+                .andExpect(jsonPath("$.articles", hasSize(1)))
+                .andExpect(jsonPath("$.articles[0].title").value("Article 2"))
+                .andExpect(jsonPath("$.articlesCount").value(2));
+    }
+
+    @Test
+    public void whenValidSlug_thenReturnsArticle() throws Exception {
         Article article = new Article("Article", "article", "What's this about", "That's what's up");
 
         when(this.articleService.getArticle("article")).thenReturn(article);
@@ -104,7 +132,7 @@ class ArticleControllerTest {
     }
 
     @Test
-    public void createsArticle() throws Exception {
+    public void whenValidInput_thenCreatesArticle() throws Exception {
         Article createdArticle = new Article("Article", "article", "What's up", "That's what's up");
 
         when(this.articleService.createArticle(any(CreateArticleRequest.class))).thenReturn(createdArticle);
@@ -125,6 +153,30 @@ class ArticleControllerTest {
                 .andExpect(jsonPath("$.article").isNotEmpty())
                 .andExpect(jsonPath("$.article.title").value("Article"))
                 .andExpect(jsonPath("$.article.description").value("What's up"));
+    }
+
+    @Test
+    public void whenInvalidInput_thenReturns422() throws Exception {
+        Article createdArticle = new Article("Article", "article", "What's up", "That's what's up");
+
+        when(this.articleService.createArticle(any(CreateArticleRequest.class))).thenReturn(createdArticle);
+
+        mockMvc
+                .perform(post("/api/articles")
+                        .accept(MediaType.APPLICATION_JSON)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        //language=json
+                        .content("""
+                                    {
+                                        "title": "Article"
+                                    }
+                                """))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.errors").isNotEmpty())
+                .andExpect(jsonPath("$.errors.description").isArray())
+                .andExpect(jsonPath("$.errors.description[0]").value("The description is required"))
+                .andExpect(jsonPath("$.errors.body").isArray())
+                .andExpect(jsonPath("$.errors.body[0]").value("The body is required"));
     }
 
     @Test

@@ -10,6 +10,7 @@ import github.maxsplawski.realworld.application.user.dto.ProfileData;
 import github.maxsplawski.realworld.application.user.service.JpaUserDetailsService;
 import github.maxsplawski.realworld.configuration.security.SecurityConfiguration;
 import github.maxsplawski.realworld.domain.article.Article;
+import jakarta.persistence.EntityNotFoundException;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -129,6 +130,16 @@ class ArticleControllerTest {
                 .andExpect(jsonPath("$.article").isNotEmpty())
                 .andExpect(jsonPath("$.article.title").value("Article"))
                 .andExpect(jsonPath("$.article.slug").value("article"));
+    }
+
+    @Test
+    public void whenNoExistingArticle_thenReturns404() throws Exception {
+        when(this.articleService.getArticle(any(String.class))).thenThrow(EntityNotFoundException.class);
+
+        mockMvc
+                .perform(get("/api/articles/not-existing-article")
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNotFound());
     }
 
     @Test

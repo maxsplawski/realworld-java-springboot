@@ -17,6 +17,10 @@ public class ArticleData {
 
     private final Instant updatedAt;
 
+    private final boolean favourited;
+
+    private final int favouritesCount;
+
     private final ProfileData author;
 
     public ArticleData(Builder builder) {
@@ -26,6 +30,8 @@ public class ArticleData {
         this.body = builder.body;
         this.createdAt = builder.createdAt;
         this.updatedAt = builder.updatedAt;
+        this.favourited = builder.favourited;
+        this.favouritesCount = builder.favouritesCount;
         this.author = builder.author;
     }
 
@@ -53,6 +59,14 @@ public class ArticleData {
         return updatedAt;
     }
 
+    public boolean isFavourited() {
+        return this.favourited;
+    }
+
+    public int getFavouritesCount() {
+        return this.favouritesCount;
+    }
+
     public ProfileData getAuthor() {
         return author;
     }
@@ -70,6 +84,8 @@ public class ArticleData {
                 ", body='" + body + '\'' +
                 ", createdAt=" + createdAt +
                 ", updatedAt=" + updatedAt +
+                ", favourited=" + favourited +
+                ", favouritesCount=" + favouritesCount +
                 ", author=" + author +
                 '}';
     }
@@ -86,6 +102,10 @@ public class ArticleData {
         private Instant createdAt;
 
         private Instant updatedAt;
+
+        private boolean favourited;
+
+        private int favouritesCount;
 
         private ProfileData author;
 
@@ -116,6 +136,16 @@ public class ArticleData {
 
         public Builder updatedAt(Instant updatedAt) {
             this.updatedAt = updatedAt;
+            return this;
+        }
+
+        public Builder favourited(boolean favourited) {
+            this.favourited = favourited;
+            return this;
+        }
+
+        public Builder favouritesCount(int favouritesCount) {
+            this.favouritesCount = favouritesCount;
             return this;
         }
 

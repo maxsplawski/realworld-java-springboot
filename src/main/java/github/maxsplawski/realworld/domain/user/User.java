@@ -34,7 +34,7 @@ public class User {
 
     @ManyToMany
     @JoinTable(
-            name = "favorite_articles",
+            name = "favourite_articles",
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "article_id")
     )

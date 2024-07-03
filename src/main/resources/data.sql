@@ -26,6 +26,13 @@ INSERT INTO articles (user_id, title, slug, description, body, created_at, updat
 VALUES (3, 'No-flour bakery tips and tricks', 'no-flour-bakery-tips-and-tricks',
         'I like bread but I do not like kneading doughs :|', 'Fluffy as a stone!', now(), now());
 
+INSERT INTO favourite_articles (user_id, article_id)
+VALUES (1, 2);
+INSERT INTO favourite_articles (user_id, article_id)
+VALUES (2, 3);
+INSERT INTO favourite_articles (user_id, article_id)
+VALUES (3, 1);
+
 INSERT INTO comments (article_id, body, created_at, updated_at)
 VALUES (1, 'Cool movie! Although I was under the impression that this is an article about dragons.', now(), now());
 INSERT INTO comments (article_id, body, created_at, updated_at)

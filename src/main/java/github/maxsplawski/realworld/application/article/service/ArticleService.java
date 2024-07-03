@@ -57,9 +57,11 @@ public class ArticleService {
                     Optional<User> authenticatedUser = this.userDetailsService.loadUserFromPrincipal(principal);
                     User author = source.getAuthor();
                     boolean isFollowingUser = false;
+                    boolean favouritesArticle = false;
 
                     if (authenticatedUser.isPresent()) {
                         isFollowingUser = this.userService.isFollowingUser(authenticatedUser.get(), author);
+                        favouritesArticle = this.favouritesArticle(source, authenticatedUser.get());
                     }
 
                     ProfileData profile = ProfileData.builder()
@@ -76,6 +78,8 @@ public class ArticleService {
                             .body(source.getBody())
                             .createdAt(source.getCreatedAt())
                             .updatedAt(source.getUpdatedAt())
+                            .favourited(favouritesArticle)
+                            .favouritesCount(source.getUsersWhoFavourited().size())
                             .author(profile)
                             .build();
                 })
@@ -127,5 +131,9 @@ public class ArticleService {
 
         this.commentRepository.deleteAll(comments);
         this.articleRepository.delete(article);
+    }
+
+    public boolean favouritesArticle(Article article, User user) {
+        return article.getUsersWhoFavourited().contains(user);
     }
 }

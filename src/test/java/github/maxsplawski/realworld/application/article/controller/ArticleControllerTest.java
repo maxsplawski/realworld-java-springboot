@@ -167,7 +167,7 @@ class ArticleControllerTest {
     }
 
     @Test
-    public void whenInvalidInput_thenReturns422() throws Exception {
+    public void whenInvalidInput_thenReturns422AndDoesNotCreateArticle() throws Exception {
         Article createdArticle = new Article("Article", "article", "What's up", "That's what's up");
 
         when(this.articleService.createArticle(any(CreateArticleRequest.class))).thenReturn(createdArticle);
@@ -191,7 +191,7 @@ class ArticleControllerTest {
     }
 
     @Test
-    public void updatesAnArticle() throws Exception {
+    public void whenValidInput_thenUpdatesArticle() throws Exception {
         Article updatedArticle = new Article("Updated Article", "updated-article", "What's up", "That's what's up");
 
         when(this.articleService.updateArticle(any(String.class), any(UpdateArticleRequest.class))).thenReturn(updatedArticle);
@@ -215,7 +215,7 @@ class ArticleControllerTest {
     }
 
     @Test
-    public void deletesAnArticle() throws Exception {
+    public void whenValidSlug_thenDeletesArticle() throws Exception {
         mockMvc
                 .perform(delete("/api/articles/article")
                         .accept(MediaType.APPLICATION_JSON))

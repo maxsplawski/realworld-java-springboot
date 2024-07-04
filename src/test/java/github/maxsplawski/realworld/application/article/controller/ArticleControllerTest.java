@@ -10,6 +10,7 @@ import github.maxsplawski.realworld.application.user.dto.ProfileData;
 import github.maxsplawski.realworld.application.user.service.JpaUserDetailsService;
 import github.maxsplawski.realworld.configuration.security.SecurityConfiguration;
 import github.maxsplawski.realworld.domain.article.Article;
+import jakarta.persistence.EntityNotFoundException;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -132,6 +133,16 @@ class ArticleControllerTest {
     }
 
     @Test
+    public void whenNoExistingArticle_thenReturns404() throws Exception {
+        when(this.articleService.getArticle(any(String.class))).thenThrow(EntityNotFoundException.class);
+
+        mockMvc
+                .perform(get("/api/articles/not-existing-article")
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNotFound());
+    }
+
+    @Test
     public void whenValidInput_thenCreatesArticle() throws Exception {
         Article createdArticle = new Article("Article", "article", "What's up", "That's what's up");
 
@@ -156,7 +167,7 @@ class ArticleControllerTest {
     }
 
     @Test
-    public void whenInvalidInput_thenReturns422() throws Exception {
+    public void whenInvalidInput_thenReturns422AndDoesNotCreateArticle() throws Exception {
         Article createdArticle = new Article("Article", "article", "What's up", "That's what's up");
 
         when(this.articleService.createArticle(any(CreateArticleRequest.class))).thenReturn(createdArticle);
@@ -180,7 +191,7 @@ class ArticleControllerTest {
     }
 
     @Test
-    public void updatesAnArticle() throws Exception {
+    public void whenValidInput_thenUpdatesArticle() throws Exception {
         Article updatedArticle = new Article("Updated Article", "updated-article", "What's up", "That's what's up");
 
         when(this.articleService.updateArticle(any(String.class), any(UpdateArticleRequest.class))).thenReturn(updatedArticle);
@@ -204,7 +215,7 @@ class ArticleControllerTest {
     }
 
     @Test
-    public void deletesAnArticle() throws Exception {
+    public void whenValidSlug_thenDeletesArticle() throws Exception {
         mockMvc
                 .perform(delete("/api/articles/article")
                         .accept(MediaType.APPLICATION_JSON))

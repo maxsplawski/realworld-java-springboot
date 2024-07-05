@@ -133,7 +133,7 @@ class ArticleControllerTest {
     }
 
     @Test
-    public void whenNoExistingArticle_thenReturns404() throws Exception {
+    public void whenNoExistingArticle_thenReturns404AndDoesNotFetchArticle() throws Exception {
         when(this.articleService.getArticle(any(String.class))).thenThrow(EntityNotFoundException.class);
 
         mockMvc
@@ -212,6 +212,16 @@ class ArticleControllerTest {
                 .andExpect(jsonPath("$.article").isNotEmpty())
                 .andExpect(jsonPath("$.article.title").value("Updated Article"))
                 .andExpect(jsonPath("$.article.description").value("What's up"));
+    }
+
+    @Test
+    public void whenInvalidSlug_thenReturns404AndDoesNotDeleteArticle() throws Exception {
+        doThrow(EntityNotFoundException.class).when(this.articleService).deleteArticle(any(String.class));
+
+        mockMvc
+                .perform(delete("/api/articles/article")
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNotFound());
     }
 
     @Test

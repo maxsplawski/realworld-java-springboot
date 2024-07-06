@@ -1,7 +1,6 @@
 package github.maxsplawski.realworld.application.article.controller;
 
 import github.maxsplawski.realworld.application.article.dto.CreateCommentRequest;
-import github.maxsplawski.realworld.application.article.service.ArticleService;
 import github.maxsplawski.realworld.application.article.service.CommentService;
 import github.maxsplawski.realworld.application.user.service.JpaUserDetailsService;
 import github.maxsplawski.realworld.configuration.security.SecurityConfiguration;
@@ -15,7 +14,7 @@ import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.List;
 
 import static org.hamcrest.Matchers.hasSize;
@@ -38,12 +37,21 @@ class CommentControllerTest {
     @MockBean
     private CommentService commentService;
 
-    @MockBean
-    private ArticleService articleService;
+    @Test
+    public void givenArticleHasNoComments_whenRequest_thenReturnsEmptyListOfComments() throws Exception {
+        when(this.commentService.getArticleComments(any(String.class))).thenReturn(new ArrayList<>());
+
+        mockMvc
+                .perform(get("/api/articles/article/comments")
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.comments").isArray())
+                .andExpect(jsonPath("$.comments", hasSize(0)));
+    }
 
     @Test
-    public void returnsAListOfComments() throws Exception {
-        List<Comment> comments = Arrays.asList(new Comment("That's nice"), new Comment("Interesting"));
+    public void whenRequest_thenReturnsListOfComments() throws Exception {
+        List<Comment> comments = List.of(new Comment("That's nice"), new Comment("Interesting"));
 
         when(this.commentService.getArticleComments(any(String.class))).thenReturn(comments);
 

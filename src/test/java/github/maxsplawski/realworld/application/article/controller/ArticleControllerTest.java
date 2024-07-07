@@ -23,6 +23,7 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import java.security.Principal;
 import java.time.Instant;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -46,6 +47,23 @@ class ArticleControllerTest {
 
     @MockBean
     private ArticleService articleService;
+
+    @Test
+    public void whenNoArticlesExist_thenReturnsEmptyListOfArticles() throws Exception {
+        when(this.articleService.getArticles(any(Principal.class), any(Pageable.class))).thenReturn(
+                ArticleListData.builder()
+                        .articles(new ArrayList<>())
+                        .articlesCount(0)
+                        .build()
+        );
+
+        mockMvc
+                .perform(get("/api/articles")
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.articles").isArray())
+                .andExpect(jsonPath("$.articles", hasSize(0)));
+    }
 
     @Test
     public void whenRequest_thenReturnsListOfArticles() throws Exception {
@@ -118,6 +136,16 @@ class ArticleControllerTest {
     }
 
     @Test
+    public void whenNoExistingArticle_thenReturns404AndDoesNotFetchArticle() throws Exception {
+        when(this.articleService.getArticle(any(String.class))).thenThrow(EntityNotFoundException.class);
+
+        mockMvc
+                .perform(get("/api/articles/not-existing-article")
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNotFound());
+    }
+
+    @Test
     public void whenValidSlug_thenReturnsArticle() throws Exception {
         Article article = new Article("Article", "article", "What's this about", "That's what's up");
 
@@ -130,16 +158,6 @@ class ArticleControllerTest {
                 .andExpect(jsonPath("$.article").isNotEmpty())
                 .andExpect(jsonPath("$.article.title").value("Article"))
                 .andExpect(jsonPath("$.article.slug").value("article"));
-    }
-
-    @Test
-    public void whenNoExistingArticle_thenReturns404AndDoesNotFetchArticle() throws Exception {
-        when(this.articleService.getArticle(any(String.class))).thenThrow(EntityNotFoundException.class);
-
-        mockMvc
-                .perform(get("/api/articles/not-existing-article")
-                        .accept(MediaType.APPLICATION_JSON))
-                .andExpect(status().isNotFound());
     }
 
     @Test
@@ -215,7 +233,7 @@ class ArticleControllerTest {
     }
 
     @Test
-    public void whenInvalidSlug_thenReturns404AndDoesNotDeleteArticle() throws Exception {
+    public void whenArticleDoesNotExist_thenReturns404AndDoesNotDeleteArticle() throws Exception {
         doThrow(EntityNotFoundException.class).when(this.articleService).deleteArticle(any(String.class));
 
         mockMvc
@@ -225,7 +243,7 @@ class ArticleControllerTest {
     }
 
     @Test
-    public void whenValidSlug_thenDeletesArticle() throws Exception {
+    public void whenArticleExists_thenReturns204AndDeletesArticle() throws Exception {
         mockMvc
                 .perform(delete("/api/articles/article")
                         .accept(MediaType.APPLICATION_JSON))

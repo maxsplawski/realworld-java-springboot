@@ -2,9 +2,11 @@ package github.maxsplawski.realworld.application.article.controller;
 
 import github.maxsplawski.realworld.application.article.dto.CreateCommentRequest;
 import github.maxsplawski.realworld.application.article.service.CommentService;
+import github.maxsplawski.realworld.application.exception.GlobalExceptionHandler;
 import github.maxsplawski.realworld.application.user.service.JpaUserDetailsService;
 import github.maxsplawski.realworld.configuration.security.SecurityConfiguration;
 import github.maxsplawski.realworld.domain.article.Comment;
+import jakarta.persistence.EntityNotFoundException;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -24,7 +26,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(CommentController.class)
-@ContextConfiguration(classes = {CommentController.class, SecurityConfiguration.class})
+@ContextConfiguration(classes = {CommentController.class, SecurityConfiguration.class, GlobalExceptionHandler.class})
 @WithMockUser
 class CommentControllerTest {
 
@@ -66,7 +68,7 @@ class CommentControllerTest {
     }
 
     @Test
-    public void createsACommentForAnArticle() throws Exception {
+    public void whenValidInput_thenReturns201AndCreatesComment() throws Exception {
         Comment createdComment = new Comment("Nice!");
 
         when(this.commentService.createCommentForArticle(any(String.class), any(CreateCommentRequest.class))).thenReturn(createdComment);
@@ -87,7 +89,17 @@ class CommentControllerTest {
     }
 
     @Test
-    public void deletesACommentFromAnArticle() throws Exception {
+    public void whenCommentDoesNotExist_thenReturns404AndDoesNotDeleteComment() throws Exception {
+        doThrow(EntityNotFoundException.class).when(this.commentService).deleteArticleComment(any(String.class), any(Long.class));
+
+        mockMvc
+                .perform(delete("/api/articles/article/comments/1")
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNotFound());
+    }
+
+    @Test
+    public void whenCommentExists_thenReturns204AndDeletesComment() throws Exception {
         mockMvc
                 .perform(delete("/api/articles/article/comments/1")
                         .accept(MediaType.APPLICATION_JSON))

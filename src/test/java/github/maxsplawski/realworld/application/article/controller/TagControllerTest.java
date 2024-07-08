@@ -13,7 +13,8 @@ import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 
-import java.util.Arrays;
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.hamcrest.Matchers.hasSize;
 import static org.mockito.Mockito.when;
@@ -36,8 +37,20 @@ class TagControllerTest {
     private TagRepository tagRepository;
 
     @Test
-    public void returnsAListOfTagNames() throws Exception {
-        Iterable<Tag> tags = Arrays.asList(new Tag("java"), new Tag("rust"));
+    public void whenNoTagsExist_thenReturnsEmptyListOfTagNames() throws Exception {
+        when(this.tagRepository.findAll()).thenReturn(new ArrayList<>());
+
+        mockMvc
+                .perform(get("/api/tags")
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.tags").isArray())
+                .andExpect(jsonPath("$.tags", hasSize(0)));
+    }
+
+    @Test
+    public void whenRequest_thenReturnsListOfTagNames() throws Exception {
+        List<Tag> tags = List.of(new Tag("java"), new Tag("rust"));
 
         when(this.tagRepository.findAll()).thenReturn(tags);
 

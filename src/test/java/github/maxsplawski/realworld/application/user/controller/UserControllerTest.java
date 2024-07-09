@@ -1,11 +1,13 @@
 package github.maxsplawski.realworld.application.user.controller;
 
+import github.maxsplawski.realworld.application.exception.GlobalExceptionHandler;
 import github.maxsplawski.realworld.application.user.dto.ProfileData;
 import github.maxsplawski.realworld.application.user.dto.UpdateUserRequest;
 import github.maxsplawski.realworld.application.user.service.JpaUserDetailsService;
 import github.maxsplawski.realworld.application.user.service.UserService;
 import github.maxsplawski.realworld.configuration.security.SecurityConfiguration;
 import github.maxsplawski.realworld.domain.user.User;
+import jakarta.persistence.EntityNotFoundException;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -18,13 +20,14 @@ import org.springframework.test.web.servlet.MockMvc;
 import java.security.Principal;
 
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(UserController.class)
-@ContextConfiguration(classes = {UserController.class, SecurityConfiguration.class})
+@ContextConfiguration(classes = {UserController.class, SecurityConfiguration.class, GlobalExceptionHandler.class})
 @WithMockUser
 class UserControllerTest {
     @Autowired
@@ -64,6 +67,16 @@ class UserControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.user").isNotEmpty())
                 .andExpect(jsonPath("$.user.username").value("TestUser"));
+    }
+
+    @Test
+    public void whenRequestedUserDoesNotExist_thenReturns404AndUserProfileIsNotFetched() throws Exception {
+        doThrow(EntityNotFoundException.class).when(this.userService).getUserProfile(any(String.class), any(Principal.class));
+
+        this.mockMvc
+                .perform(get("/api/profiles/TestUser")
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNotFound());
     }
 
     @Test

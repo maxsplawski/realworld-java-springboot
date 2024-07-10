@@ -23,8 +23,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @WebMvcTest(UserController.class)
 @ContextConfiguration(classes = {UserController.class, SecurityConfiguration.class, GlobalExceptionHandler.class})
@@ -38,6 +37,27 @@ class UserControllerTest {
 
     @MockBean
     private UserService userService;
+
+    @Test
+    public void whenRequestedUserDoesNotExist_thenReturns404AndUserIsNotUpdated() throws Exception {
+        doThrow(EntityNotFoundException.class).when(this.userService).updateUser(any(String.class), any(UpdateUserRequest.class));
+
+        this.mockMvc
+                .perform(put("/api/user")
+                        .accept(MediaType.APPLICATION_JSON)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        // language=json
+                        .content("""
+                                    {
+                                        "email": "test.user@mail.com",
+                                        "username": "TestUser",
+                                        "password": "123"
+                                    }
+                                """))
+                .andExpect(status().isNotFound())
+                .andExpect(content().string(""));
+
+    }
 
     @Test
     public void updatesAUser() throws Exception {

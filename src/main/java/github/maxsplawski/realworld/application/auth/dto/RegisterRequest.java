@@ -6,14 +6,17 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 
 public class RegisterRequest {
-    @NotBlank
+    @NotBlank(message = "The username is required")
     private final String username;
 
-    @NotBlank
-    @Email
+    @NotBlank(message = "The email is required")
+    @Email(
+            regexp = "^[a-zA-Z0-9_!#$%&’*+/=?`{|}~^.-]+@[a-zA-Z0-9.-]+$",
+            message = "The provided email is invalid"
+    )
     private final String email;
 
-    @NotBlank
+    @NotBlank(message = "The password is required")
     private final String password;
 
     private final String bio;

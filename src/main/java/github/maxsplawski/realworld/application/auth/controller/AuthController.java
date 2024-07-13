@@ -10,16 +10,14 @@ import github.maxsplawski.realworld.domain.user.User;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.context.request.WebRequest;
 
 import java.security.Principal;
 import java.util.Map;
 
 @RestController
+@RequestMapping("/api/user")
 class AuthController {
     private final AuthService authService;
     private final UserService userService;
@@ -66,7 +64,7 @@ class AuthController {
                 .body(this.authService.wrapAuthenticatedUserData(authenticatedUserData));
     }
 
-    @GetMapping("/api/user")
+    @GetMapping
     public ResponseEntity<Map<String, AuthenticatedUserData>> getAuthenticatedUser(
             WebRequest request,
             Principal principal

@@ -105,7 +105,7 @@ class AuthControllerTest {
         when(this.authService.wrapAuthenticatedUserData(any(AuthenticatedUserData.class))).thenReturn(authenticatedUserData);
 
         this.mockMvc
-                .perform(post("/login")
+                .perform(post("/api/user/login")
                         .accept(MediaType.APPLICATION_JSON)
                         .contentType(MediaType.APPLICATION_JSON)
                         // language=json

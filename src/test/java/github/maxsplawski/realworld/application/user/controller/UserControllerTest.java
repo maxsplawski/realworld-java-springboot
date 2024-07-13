@@ -39,7 +39,7 @@ class UserControllerTest {
     private UserService userService;
 
     @Test
-    public void whenRequestedUserDoesNotExist_thenReturns404AndUserIsNotUpdated() throws Exception {
+    public void whenUserDoesNotExist_thenReturns404AndUserIsNotUpdated() throws Exception {
         doThrow(EntityNotFoundException.class).when(this.userService).updateUser(any(String.class), any(UpdateUserRequest.class));
 
         this.mockMvc
@@ -56,11 +56,10 @@ class UserControllerTest {
                                 """))
                 .andExpect(status().isNotFound())
                 .andExpect(content().string(""));
-
     }
 
     @Test
-    public void updatesAUser() throws Exception {
+    public void whenValidData_thenUpdatesUser() throws Exception {
         User updatedUser = new User(
                 "test.user@mail.com",
                 "TestUser",
@@ -90,17 +89,16 @@ class UserControllerTest {
     }
 
     @Test
-    public void whenRequestedUserDoesNotExist_thenReturns404AndUserProfileIsNotFetched() throws Exception {
+    public void whenUserDoesNotExist_thenReturns404AndUserProfileIsNotFetched() throws Exception {
         doThrow(EntityNotFoundException.class).when(this.userService).getUserProfile(any(String.class), any(Principal.class));
 
-        this.mockMvc
-                .perform(get("/api/profiles/TestUser")
-                        .accept(MediaType.APPLICATION_JSON))
-                .andExpect(status().isNotFound());
+        this.mockMvc.perform(get("/api/profiles/{username}", "TestUser").accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNotFound())
+                .andExpect(content().string(""));
     }
 
     @Test
-    public void returnsAUserProfile() throws Exception {
+    public void whenUserExists_thenReturnsUserProfile() throws Exception {
         ProfileData profile = ProfileData.builder()
                 .username("TestUser")
                 .bio("Hello")
@@ -110,15 +108,14 @@ class UserControllerTest {
 
         when(this.userService.getUserProfile(any(String.class), (any(Principal.class)))).thenReturn(profile);
 
-        this.mockMvc
-                .perform(get("/api/profiles/TestUser"))
+        this.mockMvc.perform(get("/api/profiles/TestUser"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.profile").isNotEmpty())
                 .andExpect(jsonPath("$.profile.username").value("TestUser"));
     }
 
     @Test
-    public void followsAUser() throws Exception {
+    public void whenValidData_thenFollowsUser() throws Exception {
         ProfileData profile = ProfileData.builder()
                 .username("TestUser")
                 .bio("Hello")

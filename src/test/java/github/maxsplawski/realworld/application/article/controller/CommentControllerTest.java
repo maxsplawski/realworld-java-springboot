@@ -22,8 +22,7 @@ import java.util.List;
 import static org.hamcrest.Matchers.hasSize;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @WebMvcTest(CommentController.class)
 @ContextConfiguration(classes = {CommentController.class, SecurityConfiguration.class, GlobalExceptionHandler.class})
@@ -43,9 +42,7 @@ class CommentControllerTest {
     public void givenArticleHasNoComments_whenRequest_thenReturnsEmptyListOfComments() throws Exception {
         when(this.commentService.getArticleComments(any(String.class))).thenReturn(new ArrayList<>());
 
-        mockMvc
-                .perform(get("/api/articles/article/comments")
-                        .accept(MediaType.APPLICATION_JSON))
+        mockMvc.perform(get("/api/articles/{slug}/comments", "article").accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.comments").isArray())
                 .andExpect(jsonPath("$.comments", hasSize(0)));
@@ -57,9 +54,7 @@ class CommentControllerTest {
 
         when(this.commentService.getArticleComments(any(String.class))).thenReturn(comments);
 
-        mockMvc
-                .perform(get("/api/articles/article/comments")
-                        .accept(MediaType.APPLICATION_JSON))
+        mockMvc.perform(get("/api/articles/{slug}/comments", "article").accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.comments").isArray())
                 .andExpect(jsonPath("$.comments", hasSize(2)))
@@ -73,15 +68,14 @@ class CommentControllerTest {
 
         when(this.commentService.createCommentForArticle(any(String.class), any(CreateCommentRequest.class))).thenReturn(createdComment);
 
-        mockMvc
-                .perform(post("/api/articles/article/comments")
+        mockMvc.perform(post("/api/articles/{slug}/comments", "article")
                         .accept(MediaType.APPLICATION_JSON)
                         .contentType(MediaType.APPLICATION_JSON)
                         //language=json
                         .content("""
-                                            {
-                                                "body": "Nice!"
-                                            }
+                                    {
+                                        "body": "Nice!"
+                                    }
                                 """))
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.comment").isNotEmpty())
@@ -92,18 +86,16 @@ class CommentControllerTest {
     public void whenCommentDoesNotExist_thenReturns404AndDoesNotDeleteComment() throws Exception {
         doThrow(EntityNotFoundException.class).when(this.commentService).deleteArticleComment(any(String.class), any(Long.class));
 
-        mockMvc
-                .perform(delete("/api/articles/article/comments/1")
-                        .accept(MediaType.APPLICATION_JSON))
-                .andExpect(status().isNotFound());
+        mockMvc.perform(delete("/api/articles/{slug}/comments/{id}", "article", "1").accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNotFound())
+                .andExpect(content().string(""));
     }
 
     @Test
     public void whenCommentExists_thenReturns204AndDeletesComment() throws Exception {
-        mockMvc
-                .perform(delete("/api/articles/article/comments/1")
-                        .accept(MediaType.APPLICATION_JSON))
-                .andExpect(status().isNoContent());
+        mockMvc.perform(delete("/api/articles/{slug}/comments/{id}", "article", "1").accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNoContent())
+                .andExpect(content().string(""));
 
         verify(this.commentService, times(1)).deleteArticleComment(any(String.class), any(Long.class));
     }

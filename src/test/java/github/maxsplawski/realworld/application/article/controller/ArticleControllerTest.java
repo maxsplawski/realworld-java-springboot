@@ -31,8 +31,7 @@ import java.util.List;
 import static org.hamcrest.Matchers.hasSize;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @WebMvcTest(ArticleController.class)
 @ContextConfiguration(classes = {ArticleController.class, SecurityConfiguration.class, GlobalExceptionHandler.class})
@@ -57,9 +56,7 @@ class ArticleControllerTest {
                         .build()
         );
 
-        mockMvc
-                .perform(get("/api/articles")
-                        .accept(MediaType.APPLICATION_JSON))
+        mockMvc.perform(get("/api/articles").accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.articles").isArray())
                 .andExpect(jsonPath("$.articles", hasSize(0)));
@@ -94,9 +91,7 @@ class ArticleControllerTest {
 
         when(this.articleService.getArticles(any(Principal.class), any(Pageable.class))).thenReturn(articlesList);
 
-        mockMvc
-                .perform(get("/api/articles")
-                        .accept(MediaType.APPLICATION_JSON))
+        mockMvc.perform(get("/api/articles").accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.articles").isArray())
                 .andExpect(jsonPath("$.articles", hasSize(2)))
@@ -125,8 +120,9 @@ class ArticleControllerTest {
 
         when(this.articleService.getArticles(any(Principal.class), any(Pageable.class))).thenReturn(articlesList);
 
-        mockMvc
-                .perform(get("/api/articles?limit=1&offset=1")
+        mockMvc.perform(get("/api/articles")
+                        .param("limit", "1")
+                        .param("offset", "1")
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.articles").isArray())
@@ -139,10 +135,9 @@ class ArticleControllerTest {
     public void whenNoExistingArticle_thenReturns404AndDoesNotFetchArticle() throws Exception {
         when(this.articleService.getArticle(any(String.class))).thenThrow(EntityNotFoundException.class);
 
-        mockMvc
-                .perform(get("/api/articles/not-existing-article")
-                        .accept(MediaType.APPLICATION_JSON))
-                .andExpect(status().isNotFound());
+        mockMvc.perform(get("/api/articles/{slug}", "non-existent-article").accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNotFound())
+                .andExpect(content().string(""));
     }
 
     @Test
@@ -151,9 +146,7 @@ class ArticleControllerTest {
 
         when(this.articleService.getArticle("article")).thenReturn(article);
 
-        mockMvc
-                .perform(get("/api/articles/article")
-                        .accept(MediaType.APPLICATION_JSON))
+        mockMvc.perform(get("/api/articles/{slug}", "article").accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.article").isNotEmpty())
                 .andExpect(jsonPath("$.article.title").value("Article"))
@@ -166,8 +159,7 @@ class ArticleControllerTest {
 
         when(this.articleService.createArticle(any(CreateArticleRequest.class))).thenReturn(createdArticle);
 
-        mockMvc
-                .perform(post("/api/articles")
+        mockMvc.perform(post("/api/articles")
                         .accept(MediaType.APPLICATION_JSON)
                         .contentType(MediaType.APPLICATION_JSON)
                         //language=json
@@ -190,8 +182,7 @@ class ArticleControllerTest {
 
         when(this.articleService.createArticle(any(CreateArticleRequest.class))).thenReturn(createdArticle);
 
-        mockMvc
-                .perform(post("/api/articles")
+        mockMvc.perform(post("/api/articles")
                         .accept(MediaType.APPLICATION_JSON)
                         .contentType(MediaType.APPLICATION_JSON)
                         //language=json
@@ -214,8 +205,7 @@ class ArticleControllerTest {
 
         when(this.articleService.updateArticle(any(String.class), any(UpdateArticleRequest.class))).thenReturn(updatedArticle);
 
-        mockMvc
-                .perform(put("/api/articles/article")
+        mockMvc.perform(put("/api/articles/{slug}", "article")
                         .accept(MediaType.APPLICATION_JSON)
                         .contentType(MediaType.APPLICATION_JSON)
                         //language=json
@@ -236,18 +226,16 @@ class ArticleControllerTest {
     public void whenArticleDoesNotExist_thenReturns404AndDoesNotDeleteArticle() throws Exception {
         doThrow(EntityNotFoundException.class).when(this.articleService).deleteArticle(any(String.class));
 
-        mockMvc
-                .perform(delete("/api/articles/article")
-                        .accept(MediaType.APPLICATION_JSON))
-                .andExpect(status().isNotFound());
+        mockMvc.perform(delete("/api/articles/{slug}", "article").accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNotFound())
+                .andExpect(content().string(""));
     }
 
     @Test
     public void whenArticleExists_thenReturns204AndDeletesArticle() throws Exception {
-        mockMvc
-                .perform(delete("/api/articles/article")
-                        .accept(MediaType.APPLICATION_JSON))
-                .andExpect(status().isNoContent());
+        mockMvc.perform(delete("/api/articles/{slug}", "article").accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNoContent())
+                .andExpect(content().string(""));
 
         verify(this.articleService, times(1)).deleteArticle(any(String.class));
     }

@@ -40,9 +40,7 @@ class TagControllerTest {
     public void whenNoTagsExist_thenReturnsEmptyListOfTagNames() throws Exception {
         when(this.tagRepository.findAll()).thenReturn(new ArrayList<>());
 
-        mockMvc
-                .perform(get("/api/tags")
-                        .accept(MediaType.APPLICATION_JSON))
+        mockMvc.perform(get("/api/tags").accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.tags").isArray())
                 .andExpect(jsonPath("$.tags", hasSize(0)));
@@ -54,9 +52,7 @@ class TagControllerTest {
 
         when(this.tagRepository.findAll()).thenReturn(tags);
 
-        mockMvc
-                .perform(get("/api/tags")
-                        .accept(MediaType.APPLICATION_JSON))
+        mockMvc.perform(get("/api/tags").accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.tags").isArray())
                 .andExpect(jsonPath("$.tags", hasSize(2)))

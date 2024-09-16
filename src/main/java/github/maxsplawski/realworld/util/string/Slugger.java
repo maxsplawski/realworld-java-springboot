@@ -5,6 +5,7 @@ import java.util.Locale;
 import java.util.regex.Pattern;
 
 public class Slugger {
+
     private static final Pattern NON_LATIN = Pattern.compile("[^\\w_-]");
     private static final Pattern SEPARATORS = Pattern.compile("[\\s\\p{Punct}&&[^-]]");
 

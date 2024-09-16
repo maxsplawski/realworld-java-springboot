@@ -9,6 +9,7 @@ import java.util.List;
 
 @Configuration
 public class WebConfiguration implements WebMvcConfigurer {
+
     @Override
     public void addArgumentResolvers(List<HandlerMethodArgumentResolver> resolvers) {
         PageableHandlerMethodArgumentResolver resolver = new PageableHandlerMethodArgumentResolver();

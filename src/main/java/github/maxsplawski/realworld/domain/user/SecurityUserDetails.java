@@ -8,6 +8,7 @@ import java.util.Arrays;
 import java.util.Collection;
 
 public class SecurityUserDetails implements UserDetails {
+    
     private final User user;
 
     private String token;

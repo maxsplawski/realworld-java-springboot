@@ -10,7 +10,7 @@
     </parent>
     <groupId>github.maxsplawski.realworld</groupId>
     <artifactId>realworld</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>0.0.1</version>
     <name>realworld</name>
     <description>An example real world Java backend built with Spring Boot</description>
     <properties>

@@ -4,10 +4,13 @@ import java.text.Normalizer;
 import java.util.Locale;
 import java.util.regex.Pattern;
 
-public class Slugger {
+public class Slugs {
 
     private static final Pattern NON_LATIN = Pattern.compile("[^\\w_-]");
     private static final Pattern SEPARATORS = Pattern.compile("[\\s\\p{Punct}&&[^-]]");
+
+    private Slugs() {
+    }
 
     public static String slugifyFrom(String input) {
         String noSeparators = SEPARATORS.matcher(input).replaceAll("-");

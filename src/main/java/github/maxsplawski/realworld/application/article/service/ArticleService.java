@@ -12,7 +12,7 @@ import github.maxsplawski.realworld.domain.article.ArticleRepository;
 import github.maxsplawski.realworld.domain.article.Comment;
 import github.maxsplawski.realworld.domain.article.CommentRepository;
 import github.maxsplawski.realworld.domain.user.User;
-import github.maxsplawski.realworld.util.string.Slugger;
+import github.maxsplawski.realworld.util.string.Slugs;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -99,7 +99,7 @@ public class ArticleService {
         Article article = new Article();
 
         String title = createArticleRequest.getTitle();
-        String slug = Slugger.slugifyFrom(title);
+        String slug = Slugs.slugifyFrom(title);
 
         article.setTitle(title);
         article.setSlug(slug);
@@ -114,7 +114,7 @@ public class ArticleService {
                 .map(article -> {
                     Optional.ofNullable(updateArticleRequest.getTitle()).ifPresent(title -> {
                         article.setTitle(title);
-                        article.setSlug(Slugger.slugifyFrom(title));
+                        article.setSlug(Slugs.slugifyFrom(title));
                     });
 
                     Optional.ofNullable(updateArticleRequest.getDescription()).ifPresent(article::setDescription);

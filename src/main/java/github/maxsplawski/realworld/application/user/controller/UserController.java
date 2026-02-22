@@ -15,6 +15,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @RestController
+@RequestMapping("/api")
 class UserController {
     private final UserService userService;
 
@@ -22,7 +23,7 @@ class UserController {
         this.userService = userService;
     }
 
-    @PutMapping("/api/user")
+    @PutMapping("/user")
     public ResponseEntity<Map<String, AuthenticatedUserData>> updateUser(
             WebRequest request,
             Principal principal,
@@ -43,7 +44,7 @@ class UserController {
         return ResponseEntity.ok().body(responseBody);
     }
 
-    @GetMapping("/api/profiles/{username}")
+    @GetMapping("/profiles/{username}")
     public ResponseEntity<Map<String, ProfileData>> getUserProfile(
             Principal principal,
             @PathVariable String username
@@ -56,7 +57,7 @@ class UserController {
         return ResponseEntity.ok().body(responseBody);
     }
 
-    @PostMapping("/api/profiles/{username}/follow")
+    @PostMapping("/profiles/{username}/follow")
     private ResponseEntity<Map<String, ProfileData>> followUser(
             Principal principal,
             @PathVariable String username
@@ -69,7 +70,7 @@ class UserController {
         return ResponseEntity.ok().body(responseBody);
     }
 
-    @DeleteMapping("/api/profiles/{username}/unfollow")
+    @DeleteMapping("/profiles/{username}/unfollow")
     private ResponseEntity<Map<String, ProfileData>> unfollowUser(
             Principal principal,
             @PathVariable String username
